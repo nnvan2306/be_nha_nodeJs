@@ -1,8 +1,13 @@
 import db from "../models/index";
 import bcrypt from "bcryptjs";
-import { createJwt } from "../middleware/jwtAction";
+import {
+    createJwtAccess,
+    createJwtRefresh,
+    verifyRefreshToken,
+} from "../middleware/jwtAction";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
+
 require("dotenv").config();
 
 const salt = bcrypt.genSaltSync(10);
@@ -63,15 +68,64 @@ const loginService = async (data) => {
             return funcReturn("wrong password", 1, []);
         }
 
-        let payload = {
+        let payloadAccess = {
             email: user.email,
             name: user.name,
             role: user.role,
-            expiresIn: process.env.JWT_EXPIRES_IN,
+            expiresIn: process.env.JWT_EXPIRES_ACCESS,
         };
-        let token = await createJwt(payload);
 
-        return funcReturn("login successfully", 0, { access_token: token });
+        let playloadRefresh = {
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            expiresIn: process.env.JWT_EXPIRES_REFRESH,
+        };
+        let access_token = await createJwtAccess(payloadAccess);
+        let refresh_token = await createJwtRefresh(playloadRefresh);
+
+        return funcReturn("login successfully", 0, {
+            access_token: access_token,
+            refresh_token: refresh_token,
+        });
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const refreshTokenService = async (token) => {
+    try {
+        let decode = await verifyRefreshToken(token);
+        if (decode.role !== "admin") {
+            return funcReturn("account is not admin !", 1, []);
+        }
+        let user = await checkEmailIsExits(decode.email);
+        if (!user) {
+            return funcReturn("acount not exits !", 1, []);
+        }
+
+        let payloadAccess = {
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            expiresIn: process.env.JWT_EXPIRES_ACCESS,
+        };
+
+        let playloadRefresh = {
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            expiresIn: process.env.JWT_EXPIRES_REFRESH,
+        };
+
+        let access_token = await createJwtAccess(payloadAccess);
+        let refresh_token = await createJwtRefresh(playloadRefresh);
+
+        return funcReturn("token", 0, {
+            access_token: access_token,
+            refresh_token: refresh_token,
+        });
     } catch (err) {
         console.log(err);
         return returnErrService();
@@ -81,4 +135,5 @@ const loginService = async (data) => {
 module.exports = {
     registerService,
     loginService,
+    refreshTokenService,
 };

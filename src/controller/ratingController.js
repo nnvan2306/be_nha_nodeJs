@@ -13,7 +13,7 @@ const handleCreateRating = async (req, res) => {
         let fetch = await ratingService.createRatingService(rating);
         return res
             .status(
-                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 404 : 500
+                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 400 : 500
             )
             .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
     } catch (err) {

@@ -34,7 +34,7 @@ export const handleCreateStatistic = async (req, res) => {
         let fetch = await createStatisticService(dataBuider);
         return res
             .status(
-                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 401 : 500
+                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 404 : 500
             )
             .json({
                 message: fetch.message,
@@ -81,7 +81,7 @@ export const deleteStatistic = async (req, res) => {
 
         return res
             .status(
-                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 401 : 500
+                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 404 : 500
             )
             .json({
                 message: fetch.message,

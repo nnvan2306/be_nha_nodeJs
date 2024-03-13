@@ -3,6 +3,7 @@ import returnErrService from "../helps/returnErrService";
 import { handleRemoveMatch } from "../middleware/removeImage";
 import db from "../models/index";
 import matchTeamService from "./matchTeamService";
+const { Op } = require("sequelize");
 
 const handleCheckExits = async (info) => {
     let match = await db.Match.findOne({
@@ -211,10 +212,76 @@ const updateMatchService = async (data) => {
     }
 };
 
+const searchMatchService = async (data) => {
+    try {
+        let seasonId = data.seasonId;
+        let hostId = data.hostId;
+        let guestId = data.guestId;
+        let matchs;
+        if (!seasonId && !hostId && !guestId) {
+            matchs = [];
+        } else if (seasonId && !hostId && !guestId) {
+            matchs = await db.Match.findAll({
+                where: {
+                    seasonId: seasonId,
+                },
+            });
+        } else if (seasonId && (!hostId || !guestId)) {
+            matchs = await db.Match.findAll({
+                where: {
+                    seasonId: seasonId,
+                    [Op.or]: [
+                        { hostId: hostId },
+                        { hostId: guestId },
+                        { guestId: hostId },
+                        { guestId: guestId },
+                    ],
+                },
+            });
+        } else if (!seasonId && (!guestId || !hostId)) {
+            matchs = await db.Match.findAll({
+                where: {
+                    [Op.or]: [
+                        { hostId: hostId },
+                        { hostId: guestId },
+                        { guestId: hostId },
+                        { guestId: guestId },
+                    ],
+                },
+            });
+        } else if (!seasonId && hostId && guestId) {
+            matchs = await db.Match.findAll({
+                where: {
+                    [Op.or]: [
+                        { hostId: hostId, guestId: guestId },
+                        { hostId: guestId, guestId: hostId },
+                    ],
+                },
+            });
+        } else {
+            matchs = await db.Match.findAll({
+                where: {
+                    seasonId: seasonId,
+                    [Op.or]: [
+                        { hostId: hostId, guestId: guestId },
+                        { hostId: guestId, guestId: hostId },
+                    ],
+                },
+            });
+        }
+
+        return funcReturn("matchs", 0, matchs);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     getMatchDetailSeasonService,
     getAllMatchService,
     createMatchService,
     deleteMatchService,
     updateMatchService,
+    searchMatchService,
 };

@@ -118,9 +118,36 @@ const handleUpdateMatch = async (req, res) => {
         return res.status(500).json(returnErrService());
     }
 };
+
+const handleSearchMatch = async (req, res) => {
+    try {
+        if (!req.query.seasonId || !req.query.hostId || !req.query.guestId) {
+            return res.status(200).json(funcReturn("empty", 0, []));
+        }
+
+        let dataBuider = {
+            seasonId: +req.query.seasonId,
+            hostId: +req.query.hostId,
+            guestId: +req.query.guestId,
+        };
+
+        let fetch = await matchService.searchMatchService(dataBuider);
+
+        return res
+            .status(
+                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 400 : 500
+            )
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
+    }
+};
+
 module.exports = {
     handleCreateMatch,
     handleGetMatch,
     handleDeleteMatch,
     handleUpdateMatch,
+    handleSearchMatch,
 };

@@ -1,3 +1,4 @@
+import funcReturn from "../helps/funcReturn";
 import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
 import userService from "../service/userService";
@@ -17,7 +18,7 @@ const handleRegister = async (req, res) => {
         //validate email
         const validateEmail = handleValidateEmail(user.email);
         if (!validateEmail) {
-            return res.status(401).json({
+            return res.status(404).json({
                 message: "Invalid email",
                 errorCode: 1,
                 data: [],
@@ -54,7 +55,7 @@ const handleLogin = async (req, res) => {
         //validate email
         const validateEmail = handleValidateEmail(user.email);
         if (!validateEmail) {
-            return res.status(401).json({
+            return res.status(404).json({
                 message: "Invalid email",
                 errorCode: 1,
                 data: [],
@@ -62,8 +63,12 @@ const handleLogin = async (req, res) => {
         }
         let login = await userService.loginService(user);
         if (login.errorCode === 0) {
-            res.cookie("jwt", login.data.access_token, {
-                maxAge: 60 * 60 * 1000,
+            res.cookie("access_token", login.data.access_token, {
+                maxAge: 3 * 1000,
+                httpOnly: true,
+            });
+            res.cookie("refresh_token", login.data.refresh_token, {
+                maxAge: 365 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
             });
         }
@@ -82,4 +87,35 @@ const handleLogin = async (req, res) => {
     }
 };
 
-module.exports = { handleRegister, handleLogin };
+const handleRefreshToken = async (req, res) => {
+    try {
+        let token = req.headers.cookie;
+        if (!token.includes("refresh_token")) {
+            return res.status(404).json(funcReturn("token expired !", 1, []));
+        }
+
+        let refresh_token = token.split("refresh_token=")[1];
+        let fetch = await userService.refreshTokenService(refresh_token);
+
+        if (fetch.errorCode === 0) {
+            res.cookie("access_token", fetch.data.access_token, {
+                maxAge: 3 * 1000,
+                httpOnly: true,
+            });
+            res.cookie("refresh_token", fetch.data.refresh_token, {
+                maxAge: 365 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+            });
+        }
+        return res
+            .status(
+                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 404 : 500
+            )
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
+    }
+};
+
+module.exports = { handleRegister, handleLogin, handleRefreshToken };

@@ -17,12 +17,15 @@ import {
     handleGetStatisticPlayer,
     handleUpdateStatistic,
 } from "../controller/statisticController";
-
 import matchController from "../controller/matchController";
+import jwtAction from "../middleware/jwtAction";
 
 const router = express.Router();
 
 const initApiRoutes = (app) => {
+    // router.all("*", jwtAction.handleCheckToken);
+
+    router.get("/refresh-token", userController.handleRefreshToken);
     router.post("/register", userController.handleRegister);
     router.post("/login", userController.handleLogin);
 
@@ -88,6 +91,7 @@ const initApiRoutes = (app) => {
         uploadMatch.single("file"),
         matchController.handleUpdateMatch
     );
+    router.get("/search-match", matchController.handleSearchMatch);
 
     return app.use("/v1", router);
 };
