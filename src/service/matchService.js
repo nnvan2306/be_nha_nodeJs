@@ -225,6 +225,12 @@ const searchMatchService = async (data) => {
                 where: {
                     seasonId: seasonId,
                 },
+                include: [
+                    {
+                        model: db.Team,
+                        attributes: ["id", "name", "logo_url"],
+                    },
+                ],
             });
         } else if (seasonId && (!hostId || !guestId)) {
             matchs = await db.Match.findAll({
@@ -237,6 +243,12 @@ const searchMatchService = async (data) => {
                         { guestId: guestId },
                     ],
                 },
+                include: [
+                    {
+                        model: db.Team,
+                        attributes: ["id", "name", "logo_url"],
+                    },
+                ],
             });
         } else if (!seasonId && (!guestId || !hostId)) {
             matchs = await db.Match.findAll({
@@ -248,26 +260,73 @@ const searchMatchService = async (data) => {
                         { guestId: guestId },
                     ],
                 },
+                include: [
+                    {
+                        model: db.Team,
+                        attributes: ["id", "name", "logo_url"],
+                    },
+                ],
             });
         } else if (!seasonId && hostId && guestId) {
-            matchs = await db.Match.findAll({
-                where: {
-                    [Op.or]: [
-                        { hostId: hostId, guestId: guestId },
-                        { hostId: guestId, guestId: hostId },
+            if (hostId === guestId) {
+                matchs = await db.Match.findAll({
+                    where: {
+                        [Op.or]: [{ hostId: hostId }, { guestId: hostId }],
+                    },
+                    include: [
+                        {
+                            model: db.Team,
+                            attributes: ["id", "name", "logo_url"],
+                        },
                     ],
-                },
-            });
+                });
+            } else {
+                matchs = await db.Match.findAll({
+                    where: {
+                        [Op.or]: [
+                            { hostId: hostId, guestId: guestId },
+                            { hostId: guestId, guestId: hostId },
+                        ],
+                    },
+                    include: [
+                        {
+                            model: db.Team,
+                            attributes: ["id", "name", "logo_url"],
+                        },
+                    ],
+                });
+            }
         } else {
-            matchs = await db.Match.findAll({
-                where: {
-                    seasonId: seasonId,
-                    [Op.or]: [
-                        { hostId: hostId, guestId: guestId },
-                        { hostId: guestId, guestId: hostId },
+            if (hostId === guestId) {
+                matchs = await db.Match.findAll({
+                    where: {
+                        seasonId: seasonId,
+                        [Op.or]: [{ hostId: hostId }, { guestId: hostId }],
+                    },
+                    include: [
+                        {
+                            model: db.Team,
+                            attributes: ["id", "name", "logo_url"],
+                        },
                     ],
-                },
-            });
+                });
+            } else {
+                matchs = await db.Match.findAll({
+                    where: {
+                        seasonId: seasonId,
+                        [Op.or]: [
+                            { hostId: hostId, guestId: guestId },
+                            { hostId: guestId, guestId: hostId },
+                        ],
+                    },
+                    include: [
+                        {
+                            model: db.Team,
+                            attributes: ["id", "name", "logo_url"],
+                        },
+                    ],
+                });
+            }
         }
 
         return funcReturn("matchs", 0, matchs);
