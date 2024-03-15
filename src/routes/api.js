@@ -6,6 +6,8 @@ import ratingController from "../controller/ratingController";
 import {
     deletePlayer,
     handleCreatePlayer,
+    handleGetPlayerActive,
+    handleGetOnePlayer,
     handleGetPlayers,
     handleSearchPlayer,
     handleUpdatePlayer,
@@ -57,6 +59,7 @@ const initApiRoutes = (app) => {
         handleCreatePlayer
     );
     router.get("/get-player", handleGetPlayers);
+
     router.delete("/delete-player", deletePlayer);
     router.put(
         "/update-player",
@@ -64,6 +67,8 @@ const initApiRoutes = (app) => {
         handleUpdatePlayer
     );
     router.get("/search-player", handleSearchPlayer);
+    router.get("/get-player-active", handleGetPlayerActive);
+    router.get("/get-one-player", handleGetOnePlayer);
 
     //Statistic
     router.post("/create-statistic", handleCreateStatistic);

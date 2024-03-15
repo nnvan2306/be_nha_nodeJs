@@ -1,3 +1,4 @@
+import funcReturn from "../helps/funcReturn";
 import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
 import {
@@ -5,6 +6,8 @@ import {
     deletePlayerService,
     getAllPlayerService,
     getLimitPlayerService,
+    getOnePlayerService,
+    getPlayerActiveService,
     searchPlayerService,
     updatePlayerService,
 } from "../service/playerService";
@@ -28,8 +31,6 @@ export const handleCreatePlayer = async (req, res) => {
             return res.status(400).json(returnInfoEmpty());
         }
 
-        console.log(req.body);
-
         let dataBuider = {
             code: player?.code,
             name: player?.name,
@@ -44,7 +45,6 @@ export const handleCreatePlayer = async (req, res) => {
             avatar_url: req.file.filename,
         };
 
-        // console.log(dataBuider);
         let fetch = await createPlayerService(dataBuider);
         return res
             .status(
@@ -156,6 +156,33 @@ export const handleSearchPlayer = async (req, res) => {
                 data: fetch.data,
             });
         }
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
+    }
+};
+
+export const handleGetPlayerActive = async (req, res) => {
+    try {
+        let players = await getPlayerActiveService();
+
+        return res.status(players.errorCode === 0 ? 200 : 500).json({
+            message: players.message,
+            errorCode: players.errorCode,
+            data: players.data,
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
+    }
+};
+
+export const handleGetOnePlayer = async (req, res) => {
+    try {
+        let player = await getOnePlayerService(req.query.playerId);
+        return res
+            .status(player.errorCode === 0 ? 200 : 500)
+            .json(funcReturn(player.message, player.errorCode, player.data));
     } catch (err) {
         console.log(err);
         return res.status(500).json(returnErrService());

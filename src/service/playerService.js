@@ -18,8 +18,6 @@ export const createPlayerService = async (data) => {
             return funcReturn("player is exits", 1, []);
         }
 
-        // console.log(data);
-
         await db.Player.create({
             code: data?.code,
             name: data?.name,
@@ -42,7 +40,7 @@ export const createPlayerService = async (data) => {
 
 export const getAllPlayerService = async () => {
     try {
-        let players = await bd.Player.findAll();
+        let players = await db.Player.findAll();
         return funcReturn("all players", 0, players);
     } catch (err) {
         console.log(err);
@@ -153,6 +151,36 @@ export const searchPlayerService = async (textSearch) => {
         }
 
         return funcReturn("players", 0, players);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+export const getPlayerActiveService = async () => {
+    try {
+        let players = await db.Player.findAll({
+            where: { isActive: true },
+        });
+        return funcReturn("all players", 0, players);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+export const getOnePlayerService = async (id) => {
+    try {
+        let players = await db.Player.findOne({
+            where: { id: id },
+            include: [
+                {
+                    model: db.Team,
+                    attributes: ["name"],
+                },
+            ],
+        });
+        return funcReturn("all players", 0, players);
     } catch (err) {
         console.log(err);
         return returnErrService();
