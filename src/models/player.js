@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
             height: DataTypes.INTEGER,
             weight: DataTypes.INTEGER,
             birthday: DataTypes.DATE,
+            isActive: DataTypes.BOOLEAN,
             teamId: DataTypes.INTEGER,
             description: DataTypes.STRING,
             des_text: DataTypes.STRING,

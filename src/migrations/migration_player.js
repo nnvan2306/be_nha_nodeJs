@@ -30,6 +30,9 @@ module.exports = {
             birthday: {
                 type: Sequelize.DATE,
             },
+            isActive: {
+                type: Sequelize.BOOLEAN,
+            },
             teamId: {
                 type: Sequelize.INTEGER,
             },

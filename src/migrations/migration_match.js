@@ -31,6 +31,18 @@ module.exports = {
             guestGoal: {
                 type: Sequelize.INTEGER,
             },
+            isPlayed: { type: Sequelize.BOOLEAN },
+            hostShoot: { type: Sequelize.INTEGER },
+            guestShoot: { type: Sequelize.INTEGER },
+            hostTarget: { type: Sequelize.INTEGER },
+            guestTarget: { type: Sequelize.INTEGER },
+            hostBallControl: { type: Sequelize.INTEGER },
+            hostConnerKick: { type: Sequelize.INTEGER },
+            guestConnerKick: { type: Sequelize.INTEGER },
+            hostRedCard: { type: Sequelize.INTEGER },
+            guestRedCard: { type: Sequelize.INTEGER },
+            hostYellowCard: { type: Sequelize.INTEGER },
+            guestYellowCard: { type: Sequelize.INTEGER },
             hostId: {
                 type: Sequelize.INTEGER,
             },

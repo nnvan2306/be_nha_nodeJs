@@ -28,6 +28,8 @@ export const handleCreatePlayer = async (req, res) => {
             return res.status(400).json(returnInfoEmpty());
         }
 
+        console.log(req.body);
+
         let dataBuider = {
             code: player?.code,
             name: player?.name,
@@ -36,11 +38,13 @@ export const handleCreatePlayer = async (req, res) => {
             weight: player?.weight,
             birthday: player?.birthday,
             teamId: player?.teamId,
+            isActive: player?.isActive,
             description: player?.description,
             des_text: player?.des_text,
             avatar_url: req.file.filename,
         };
 
+        // console.log(dataBuider);
         let fetch = await createPlayerService(dataBuider);
         return res
             .status(

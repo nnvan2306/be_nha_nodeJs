@@ -18,6 +18,8 @@ export const createPlayerService = async (data) => {
             return funcReturn("player is exits", 1, []);
         }
 
+        // console.log(data);
+
         await db.Player.create({
             code: data?.code,
             name: data?.name,
@@ -27,6 +29,7 @@ export const createPlayerService = async (data) => {
             birthday: data?.birthday,
             teamId: data?.teamId,
             description: data?.description,
+            isActive: data?.isActive,
             des_text: data?.des_text,
             avatar_url: `/images/${data?.avatar_url}`,
         });

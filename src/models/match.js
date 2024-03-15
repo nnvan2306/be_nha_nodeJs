@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, INTEGER } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class Match extends Model {
         /**
@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
                 through: "Match_Team",
                 foreignKey: "matchId",
             });
+            Match.hasMany(models.Scored);
         }
     }
 
@@ -20,11 +21,23 @@ module.exports = (sequelize, DataTypes) => {
         {
             title: DataTypes.STRING,
             meta: DataTypes.STRING,
+            isPlayed: DataTypes.BOOLEAN,
             match_url: DataTypes.STRING,
             date: DataTypes.STRING,
             hour: DataTypes.STRING,
             hostGoal: DataTypes.INTEGER,
             guestGoal: DataTypes.INTEGER,
+            hostShoot: DataTypes.INTEGER,
+            guestShoot: DataTypes.INTEGER,
+            hostTarget: DataTypes.INTEGER,
+            guestTarget: DataTypes.INTEGER,
+            hostBallControl: DataTypes.INTEGER,
+            hostConnerKick: DataTypes.INTEGER,
+            guestConnerKick: DataTypes.INTEGER,
+            hostRedCard: DataTypes.INTEGER,
+            guestRedCard: DataTypes.INTEGER,
+            hostYellowCard: DataTypes.INTEGER,
+            guestYellowCard: DataTypes.INTEGER,
             hostId: DataTypes.INTEGER,
             guestId: DataTypes.INTEGER,
             seasonId: DataTypes.INTEGER,
