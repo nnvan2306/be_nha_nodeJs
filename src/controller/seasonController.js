@@ -5,39 +5,40 @@ import seasonService from "../service/seasonService";
 const handleCreateSeason = async (req, res) => {
     const season = req.body;
     // console.log(req.headers);
-    console.log(JSON.stringify(req));
-    // try {
-    //     //validate
-    //     if (
-    //         !season.index ||
-    //         !season.name ||
-    //         !season.description ||
-    //         !season.des_text
-    //     ) {
-    //         return res.status(400).json(returnInfoEmpty());
-    //     }
+    // console.log(JSON.stringify(req));
+    try {
+        //validate
 
-    //     //create season
+        if (
+            !season.index ||
+            !season.name ||
+            !season.description ||
+            !season.des_text
+        ) {
+            return res.status(400).json(returnInfoEmpty());
+        }
 
-    //     let createSeason = await seasonService.createSeasonService(season);
+        //create season
 
-    //     return res
-    //         .status(
-    //             createSeason?.errorCode === 0
-    //                 ? 200
-    //                 : createSeason?.errorCode === 1
-    //                 ? 400
-    //                 : 500
-    //         )
-    //         .json({
-    //             message: createSeason?.message,
-    //             errorCode: createSeason?.errorCode,
-    //             data: createSeason?.data,
-    //         });
-    // } catch (err) {
-    //     console.log(err);
-    //     return res.status(500).json(returnErrService());
-    // }
+        let createSeason = await seasonService.createSeasonService(season);
+
+        return res
+            .status(
+                createSeason?.errorCode === 0
+                    ? 200
+                    : createSeason?.errorCode === 1
+                    ? 400
+                    : 500
+            )
+            .json({
+                message: createSeason?.message,
+                errorCode: createSeason?.errorCode,
+                data: createSeason?.data,
+            });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
+    }
 };
 
 const handleGetLimitSeasons = async (req, res) => {

@@ -6,6 +6,8 @@ import matchService from "../service/matchService";
 const handleCreateMatch = async (req, res) => {
     try {
         let data = req.body;
+        // let data = JSON.stringify(req.body);
+
         if (
             !data.title ||
             !data.meta ||
@@ -22,8 +24,10 @@ const handleCreateMatch = async (req, res) => {
 
         let dataBuider = {
             ...req.body,
-            match_url: req.file.filename,
         };
+        if (data.isPlayded) {
+            dataBuider.match_url = req.file.filename;
+        }
         let fetch = await matchService.createMatchService(dataBuider);
 
         return res
