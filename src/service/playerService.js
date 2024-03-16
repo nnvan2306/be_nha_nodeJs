@@ -27,6 +27,7 @@ export const createPlayerService = async (data) => {
             birthday: data?.birthday,
             teamId: data?.teamId,
             description: data?.description,
+            location: data.location,
             isActive: data?.isActive,
             des_text: data?.des_text,
             avatar_url: `/images/${data?.avatar_url}`,
@@ -101,6 +102,7 @@ export const updatePlayerService = async (data) => {
                     height: data.height,
                     weight: data.weight,
                     birthday: data.birthday,
+                    location: data.location,
                     teamId: data.teamId,
                 },
                 {
@@ -161,6 +163,7 @@ export const getPlayerActiveService = async () => {
     try {
         let players = await db.Player.findAll({
             where: { isActive: true },
+            include: [{ model: db.Team }],
         });
         return funcReturn("all players", 0, players);
     } catch (err) {

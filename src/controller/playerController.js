@@ -26,6 +26,7 @@ export const handleCreatePlayer = async (req, res) => {
             !player?.teamId ||
             !player?.description ||
             !player?.des_text ||
+            !player?.location ||
             !req.file
         ) {
             return res.status(400).json(returnInfoEmpty());
@@ -37,6 +38,7 @@ export const handleCreatePlayer = async (req, res) => {
             nationality: player?.nationality,
             height: player?.height,
             weight: player?.weight,
+            location: player?.location,
             birthday: player?.birthday,
             teamId: player?.teamId,
             isActive: player?.isActive,
@@ -44,6 +46,8 @@ export const handleCreatePlayer = async (req, res) => {
             des_text: player?.des_text,
             avatar_url: req.file.filename,
         };
+
+        console.log(dataBuider);
 
         let fetch = await createPlayerService(dataBuider);
         return res
@@ -116,6 +120,7 @@ export const handleUpdatePlayer = async (req, res) => {
             !player.weight ||
             !player.birthday ||
             !player.teamId ||
+            !player.lcation ||
             !player.avatar_url
         ) {
             return res.status(400).json(returnInfoEmpty());
