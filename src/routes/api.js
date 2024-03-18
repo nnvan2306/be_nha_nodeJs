@@ -59,7 +59,6 @@ const initApiRoutes = (app) => {
         handleCreatePlayer
     );
     router.get("/get-player", handleGetPlayers);
-
     router.delete("/delete-player", deletePlayer);
     router.put(
         "/update-player",

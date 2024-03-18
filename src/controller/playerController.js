@@ -47,8 +47,6 @@ export const handleCreatePlayer = async (req, res) => {
             avatar_url: req.file.filename,
         };
 
-        console.log(dataBuider);
-
         let fetch = await createPlayerService(dataBuider);
         return res
             .status(
@@ -108,6 +106,7 @@ export const deletePlayer = async (req, res) => {
 
 export const handleUpdatePlayer = async (req, res) => {
     let player = JSON.parse(JSON.stringify(req.body));
+    console.log(player);
     try {
         if (
             !player.id ||
@@ -120,9 +119,10 @@ export const handleUpdatePlayer = async (req, res) => {
             !player.weight ||
             !player.birthday ||
             !player.teamId ||
-            !player.lcation ||
+            !player.location ||
             !player.avatar_url
         ) {
+            console.log("err");
             return res.status(400).json(returnInfoEmpty());
         }
 
