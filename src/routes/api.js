@@ -18,6 +18,7 @@ import {
     handleCreateStatistic,
     handleGetStatisticPlayer,
     handleUpdateStatistic,
+    handleGetStatisticSeason,
 } from "../controller/statisticController";
 import matchController from "../controller/matchController";
 import jwtAction from "../middleware/jwtAction";
@@ -74,6 +75,7 @@ const initApiRoutes = (app) => {
     router.get("/get-statistic-player", handleGetStatisticPlayer);
     router.put("/update-statistic", handleUpdateStatistic);
     router.delete("/delete-statistic", deleteStatistic);
+    router.get("/get-statistic-season", handleGetStatisticSeason);
 
     // rating
     router.post("/create-rating", ratingController.handleCreateRating);

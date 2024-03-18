@@ -1,9 +1,11 @@
+import funcReturn from "../helps/funcReturn";
 import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
 import {
     createStatisticService,
     deleteStatisticService,
     getStatisticPlayerService,
+    getStatisticSeasonService,
     updateStatisticService,
 } from "../service/statisticService";
 
@@ -12,11 +14,9 @@ export const handleGetStatisticPlayer = async (req, res) => {
         if (req.query.id) {
             let fetch = await getStatisticPlayerService(req.query.id);
 
-            return res.status(fetch.errorCode === 0 ? 200 : 500).json({
-                message: fetch.message,
-                errorCode: fetch.errorCode,
-                data: fetch.data,
-            });
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         }
     } catch (err) {
         console.log(err);
@@ -36,11 +36,7 @@ export const handleCreateStatistic = async (req, res) => {
             .status(
                 fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 404 : 500
             )
-            .json({
-                message: fetch.message,
-                errorCode: fetch.errorCode,
-                data: fetch.data,
-            });
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
     } catch (err) {
         console.log(err);
         return res.status(500).json(returnErrService());
@@ -60,11 +56,9 @@ export const handleUpdateStatistic = async (req, res) => {
 
         let fetch = await updateStatisticService(req.body);
 
-        return res.status(fetch.errorCode === 0 ? 200 : 500).json({
-            message: fetch.message,
-            errorCode: fetch.errorCode,
-            data: fetch.data,
-        });
+        return res
+            .status(fetch.errorCode === 0 ? 200 : 500)
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
     } catch (err) {
         console.log(err);
         return res.status(500).json(returnErrService());
@@ -83,12 +77,21 @@ export const deleteStatistic = async (req, res) => {
             .status(
                 fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 404 : 500
             )
-            .json({
-                message: fetch.message,
-                errorCode: fetch.errorCode,
-                data: fetch.data,
-            });
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
     } catch (err) {
         console.log(err);
+        return res.status(500).json(returnErrService());
+    }
+};
+
+export const handleGetStatisticSeason = async (req, res) => {
+    try {
+        let fetch = await getStatisticSeasonService(req.query.seasonId);
+        return res
+            .status(fetch.errorCode === 0 ? 200 : 500)
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
     }
 };

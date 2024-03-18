@@ -19,9 +19,9 @@ export const getStatisticPlayerService = async (id) => {
     }
 };
 
-const handleCheckSeasonExits = async (id) => {
+const handleCheckStatisticExits = async (seasonId, playerId) => {
     let statistic = await db.Statistic.findOne({
-        where: { seasonId: id },
+        where: { seasonId: seasonId, playerId: playerId },
     });
 
     return statistic;
@@ -36,9 +36,11 @@ const handleCheckExits = async (id) => {
 };
 
 export const createStatisticService = async (data) => {
-    console.log("create");
     try {
-        let check = await handleCheckSeasonExits(data.seasonId);
+        let check = await handleCheckStatisticExits(
+            data.seasonId,
+            data.playerId
+        );
         if (check) {
             return funcReturn("statistic is exits !", 1, []);
         }
@@ -99,6 +101,26 @@ export const deleteStatisticService = async (id) => {
         });
 
         return funcReturn("delete Statistic successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+export const getStatisticSeasonService = async (seasonId) => {
+    try {
+        let statistics = await db.Statistic.findAll({
+            where: { seasonId: seasonId },
+            include: {
+                model: db.Player,
+                attributes: ["name", "avatar_url"],
+                include: {
+                    model: db.Team,
+                    attributes: ["name", "logo_url"],
+                },
+            },
+        });
+        return funcReturn("statistics ", 0, statistics);
     } catch (err) {
         console.log(err);
         return returnErrService();
