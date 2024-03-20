@@ -13,6 +13,7 @@ module.exports = {
             minuteGoal: { type: Sequelize.INTEGER },
             isPenalty: { type: Sequelize.BOOLEAN },
             matchId: { type: Sequelize.INTEGER },
+            teamId: { type: Sequelize.INTEGER },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

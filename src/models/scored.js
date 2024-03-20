@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Scored.belongsTo(models.Match);
         }
     }
 
@@ -18,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
             minuteGoal: DataTypes.INTEGER,
             isPenalty: DataTypes.BOOLEAN,
             matchId: DataTypes.INTEGER,
+            teamId: DataTypes.INTEGER,
         },
         {
             sequelize,

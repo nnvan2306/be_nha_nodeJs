@@ -376,9 +376,13 @@ const getMatchByIdService = async (id) => {
     try {
         let match = await db.Match.findOne({
             where: { id: id },
-            include: {
-                model: db.Team,
-            },
+            include: [
+                {
+                    model: db.Team,
+                },
+                { model: db.Season, attributes: ["id", "name"] },
+                { model: db.Scored },
+            ],
         });
         return funcReturn("match", 0, match);
     } catch (err) {

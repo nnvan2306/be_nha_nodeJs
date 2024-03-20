@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "matchId",
             });
             Match.hasMany(models.Scored);
+            Match.belongsTo(models.Season);
         }
     }
 

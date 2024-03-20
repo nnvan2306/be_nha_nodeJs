@@ -21,7 +21,9 @@ import {
     handleGetStatisticSeason,
 } from "../controller/statisticController";
 import matchController from "../controller/matchController";
+import scoredController from "../controller/scoredController";
 import jwtAction from "../middleware/jwtAction";
+import scored from "../models/scored";
 
 const router = express.Router();
 
@@ -99,6 +101,12 @@ const initApiRoutes = (app) => {
     );
     router.get("/search-match", matchController.handleSearchMatch);
     router.get("/get-match-by-id", matchController.handleGetMAtchById);
+
+    //scored
+    router.get("/get-scored", scoredController.handleGetScored);
+    router.delete("/delete-scored", scoredController.handleDeleteScored);
+    router.post("/create-scored", scoredController.handleCreateScored);
+    router.put("/update-scored", scoredController.handleUpdateScored);
 
     return app.use("/v1", router);
 };
