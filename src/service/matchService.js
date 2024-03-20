@@ -41,7 +41,6 @@ const createMatchService = async (data) => {
             return funcReturn("Match is exits !", 1, []);
         }
 
-        console.log(data);
         await db.Match.create({
             title: data.title,
             meta: data.meta,
@@ -373,6 +372,21 @@ const searchMatchService = async (data) => {
     }
 };
 
+const getMatchByIdService = async (id) => {
+    try {
+        let match = await db.Match.findOne({
+            where: { id: id },
+            include: {
+                model: db.Team,
+            },
+        });
+        return funcReturn("match", 0, match);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     getMatchDetailSeasonService,
     getAllMatchService,
@@ -380,4 +394,5 @@ module.exports = {
     deleteMatchService,
     updateMatchService,
     searchMatchService,
+    getMatchByIdService,
 };

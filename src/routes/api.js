@@ -98,6 +98,7 @@ const initApiRoutes = (app) => {
         matchController.handleUpdateMatch
     );
     router.get("/search-match", matchController.handleSearchMatch);
+    router.get("/get-match-by-id", matchController.handleGetMAtchById);
 
     return app.use("/v1", router);
 };

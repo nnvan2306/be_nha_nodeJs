@@ -74,7 +74,20 @@ const handleGetRatingSeasonService = async (seasonId) => {
     try {
         let rating = await db.Rating.findAll({
             where: { seasonId: seasonId },
-            include: { model: db.Team },
+            include: {
+                model: db.Team,
+                include: {
+                    model: db.Match,
+                    where: { seasonId: seasonId },
+                    attributes: [
+                        "hostId",
+                        "guestId",
+                        "hostGoal",
+                        "guestGoal",
+                        "date",
+                    ],
+                },
+            },
         });
 
         return funcReturn(`rating season ${seasonId}`, 0, rating);
