@@ -3,6 +3,7 @@ import returnErrService from "../helps/returnErrService";
 import { handleRemoveAvatar } from "../middleware/removeImage";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
+// const { Op } = require("sequelize");
 
 const handleCheckExits = async (code) => {
     let player = await db.Player.findOne({
@@ -11,7 +12,7 @@ const handleCheckExits = async (code) => {
     return player;
 };
 
-export const createPlayerService = async (data) => {
+const createPlayerService = async (data) => {
     try {
         let check = await handleCheckExits(data.code);
         if (check) {
@@ -39,7 +40,7 @@ export const createPlayerService = async (data) => {
     }
 };
 
-export const getAllPlayerService = async () => {
+const getAllPlayerService = async () => {
     try {
         let players = await db.Player.findAll();
         return funcReturn("all players", 0, players);
@@ -49,7 +50,7 @@ export const getAllPlayerService = async () => {
     }
 };
 
-export const getLimitPlayerService = async (page, pageSize) => {
+const getLimitPlayerService = async (page, pageSize) => {
     try {
         let offset = (page - 1) * pageSize;
         let { count, rows } = await db.Player.findAndCountAll({
@@ -72,7 +73,7 @@ export const getLimitPlayerService = async (page, pageSize) => {
     }
 };
 
-export const deletePlayerService = async (code) => {
+const deletePlayerService = async (code) => {
     try {
         let check = await handleCheckExits(code);
         let path = check.avatar_url.split("/images/")[1];
@@ -89,7 +90,7 @@ export const deletePlayerService = async (code) => {
     }
 };
 
-export const updatePlayerService = async (data) => {
+const updatePlayerService = async (data) => {
     try {
         if (!data.isChangeFile) {
             await db.Player.update(
@@ -139,7 +140,7 @@ export const updatePlayerService = async (data) => {
     }
 };
 
-export const searchPlayerService = async (textSearch) => {
+const searchPlayerService = async (textSearch) => {
     try {
         let checkType = textSearch / 1;
         let players;
@@ -161,7 +162,7 @@ export const searchPlayerService = async (textSearch) => {
     }
 };
 
-export const getPlayerActiveService = async () => {
+const getPlayerActiveService = async () => {
     try {
         let players = await db.Player.findAll({
             where: { isActive: true },
@@ -174,7 +175,7 @@ export const getPlayerActiveService = async () => {
     }
 };
 
-export const getOnePlayerService = async (id) => {
+const getOnePlayerService = async (id) => {
     try {
         let player = await db.Player.findOne({
             where: { id: id },
@@ -190,4 +191,31 @@ export const getOnePlayerService = async (id) => {
         console.log(err);
         return returnErrService();
     }
+};
+
+const getPlayerDetailSeason = async (hostId, guestId) => {
+    try {
+        let players = await db.Player.findAll({
+            where: {
+                [Op.or]: [{ teamId: hostId }, { teamId: guestId }],
+            },
+        });
+
+        return funcReturn("players", 0, players);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+module.exports = {
+    createPlayerService,
+    deletePlayerService,
+    getAllPlayerService,
+    getLimitPlayerService,
+    getOnePlayerService,
+    getPlayerActiveService,
+    searchPlayerService,
+    updatePlayerService,
+    getPlayerDetailSeason,
 };

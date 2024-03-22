@@ -3,25 +3,11 @@ import userController from "../controller/userController";
 import seasonController from "../controller/seasonController";
 import teamController from "../controller/teamController";
 import ratingController from "../controller/ratingController";
-import {
-    deletePlayer,
-    handleCreatePlayer,
-    handleGetPlayerActive,
-    handleGetOnePlayer,
-    handleGetPlayers,
-    handleSearchPlayer,
-    handleUpdatePlayer,
-} from "../controller/playerController";
-import { upload, uploadAvatar, uploadMatch } from "../middleware/multer";
-import {
-    deleteStatistic,
-    handleCreateStatistic,
-    handleGetStatisticPlayer,
-    handleUpdateStatistic,
-    handleGetStatisticSeason,
-} from "../controller/statisticController";
+import playerController from "../controller/playerController";
+import statisticController from "../controller/statisticController";
 import matchController from "../controller/matchController";
 import scoredController from "../controller/scoredController";
+import { upload, uploadAvatar, uploadMatch } from "../middleware/multer";
 import jwtAction from "../middleware/jwtAction";
 import scored from "../models/scored";
 
@@ -59,25 +45,35 @@ const initApiRoutes = (app) => {
     router.post(
         "/create-player",
         uploadAvatar.single("file"),
-        handleCreatePlayer
+        playerController.handleCreatePlayer
     );
-    router.get("/get-player", handleGetPlayers);
-    router.delete("/delete-player", deletePlayer);
+    router.get("/get-player", playerController.handleGetPlayers);
+    router.delete("/delete-player", playerController.handleDeletePlayer);
     router.put(
         "/update-player",
         uploadAvatar.single("file"),
-        handleUpdatePlayer
+        playerController.handleUpdatePlayer
     );
-    router.get("/search-player", handleSearchPlayer);
-    router.get("/get-player-active", handleGetPlayerActive);
-    router.get("/get-one-player", handleGetOnePlayer);
+    router.get("/search-player", playerController.handleSearchPlayer);
+    router.get("/get-player-active", playerController.handleGetPlayerActive);
+    router.get("/get-one-player", playerController.handleGetOnePlayer);
+    router.get(
+        "/get-player-season",
+        playerController.handleGetPlayerDetailSeason
+    );
 
     //Statistic
-    router.post("/create-statistic", handleCreateStatistic);
-    router.get("/get-statistic-player", handleGetStatisticPlayer);
-    router.put("/update-statistic", handleUpdateStatistic);
-    router.delete("/delete-statistic", deleteStatistic);
-    router.get("/get-statistic-season", handleGetStatisticSeason);
+    router.post("/create-statistic", statisticController.handleCreateStatistic);
+    router.get(
+        "/get-statistic-player",
+        statisticController.handleGetStatisticPlayer
+    );
+    router.put("/update-statistic", statisticController.handleUpdateStatistic);
+    router.delete("/delete-statistic", statisticController.deleteStatistic);
+    router.get(
+        "/get-statistic-season",
+        statisticController.handleGetStatisticSeason
+    );
 
     // rating
     router.post("/create-rating", ratingController.handleCreateRating);

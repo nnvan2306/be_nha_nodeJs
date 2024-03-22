@@ -1,18 +1,9 @@
 import funcReturn from "../helps/funcReturn";
 import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
-import {
-    createPlayerService,
-    deletePlayerService,
-    getAllPlayerService,
-    getLimitPlayerService,
-    getOnePlayerService,
-    getPlayerActiveService,
-    searchPlayerService,
-    updatePlayerService,
-} from "../service/playerService";
+import playerService from "../service/playerService";
 
-export const handleCreatePlayer = async (req, res) => {
+const handleCreatePlayer = async (req, res) => {
     const player = JSON.parse(JSON.stringify(req.body));
     try {
         //validate
@@ -47,7 +38,7 @@ export const handleCreatePlayer = async (req, res) => {
             avatar_url: req.file.filename,
         };
 
-        let fetch = await createPlayerService(dataBuider);
+        let fetch = await playerService.createPlayerService(dataBuider);
         return res
             .status(
                 fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 400 : 500
@@ -63,7 +54,7 @@ export const handleCreatePlayer = async (req, res) => {
     }
 };
 
-export const handleGetPlayers = async (req, res) => {
+const handleGetPlayers = async (req, res) => {
     let player = req.query;
     try {
         let players;
@@ -71,9 +62,12 @@ export const handleGetPlayers = async (req, res) => {
             let page = player.page;
             let pageSize = player.pageSize;
 
-            players = await getLimitPlayerService(+page, +pageSize);
+            players = await playerService.getLimitPlayerService(
+                +page,
+                +pageSize
+            );
         } else {
-            players = await getAllPlayerService();
+            players = await playerService.getAllPlayerService();
         }
 
         return res.status(players.errorCode === 0 ? 200 : 500).json({
@@ -87,11 +81,11 @@ export const handleGetPlayers = async (req, res) => {
     }
 };
 
-export const deletePlayer = async (req, res) => {
+const handleDeletePlayer = async (req, res) => {
     try {
         let player = req.query.code;
         if (player) {
-            let fetch = await deletePlayerService(player);
+            let fetch = await playerService.deletePlayerService(player);
             return res.status(200).json({
                 message: fetch.message,
                 errorCode: fetch.errorCode,
@@ -104,7 +98,7 @@ export const deletePlayer = async (req, res) => {
     }
 };
 
-export const handleUpdatePlayer = async (req, res) => {
+const handleUpdatePlayer = async (req, res) => {
     let player = JSON.parse(JSON.stringify(req.body));
     console.log(player);
     try {
@@ -134,7 +128,7 @@ export const handleUpdatePlayer = async (req, res) => {
             dataBuider.avatar = req?.file?.filename;
         }
 
-        let fetch = await updatePlayerService(dataBuider);
+        let fetch = await playerService.updatePlayerService(dataBuider);
         return res.status(fetch.errorCode === 0 ? 200 : 500).json({
             message: fetch.message,
             errorCode: fetch.errorCode,
@@ -146,14 +140,14 @@ export const handleUpdatePlayer = async (req, res) => {
     }
 };
 
-export const handleSearchPlayer = async (req, res) => {
+const handleSearchPlayer = async (req, res) => {
     try {
         let search = req.query;
 
         if (search.q) {
             let textSearch = search.q;
 
-            let fetch = await searchPlayerService(textSearch);
+            let fetch = await playerService.searchPlayerService(textSearch);
 
             return res.status(fetch.errorCode === 0 ? 200 : 500).json({
                 message: fetch.message,
@@ -167,9 +161,9 @@ export const handleSearchPlayer = async (req, res) => {
     }
 };
 
-export const handleGetPlayerActive = async (req, res) => {
+const handleGetPlayerActive = async (req, res) => {
     try {
-        let players = await getPlayerActiveService();
+        let players = await playerService.getPlayerActiveService();
 
         return res.status(players.errorCode === 0 ? 200 : 500).json({
             message: players.message,
@@ -182,14 +176,40 @@ export const handleGetPlayerActive = async (req, res) => {
     }
 };
 
-export const handleGetOnePlayer = async (req, res) => {
+const handleGetOnePlayer = async (req, res) => {
     try {
-        let player = await getOnePlayerService(req.query.playerId);
+        let fetch = await playerService.getOnePlayerService(req.query.playerId);
         return res
-            .status(player.errorCode === 0 ? 200 : 500)
-            .json(funcReturn(player.message, player.errorCode, player.data));
+            .status(fetch.errorCode === 0 ? 200 : 500)
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
     } catch (err) {
         console.log(err);
         return res.status(500).json(returnErrService());
     }
+};
+
+const handleGetPlayerDetailSeason = async (req, res) => {
+    try {
+        let fetch = await playerService.getPlayerDetailSeason(
+            +req.query.hostId,
+            +req.query.guestId
+        );
+        return res
+            .status(fetch.errorCode === 0 ? 200 : 500)
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
+    }
+};
+
+module.exports = {
+    handleCreatePlayer,
+    handleGetPlayers,
+    handleDeletePlayer,
+    handleUpdatePlayer,
+    handleSearchPlayer,
+    handleGetPlayerActive,
+    handleGetOnePlayer,
+    handleGetPlayerDetailSeason,
 };

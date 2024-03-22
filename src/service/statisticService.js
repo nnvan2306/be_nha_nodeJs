@@ -2,7 +2,7 @@ import returnErrService from "../helps/returnErrService";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
 
-export const getStatisticPlayerService = async (id) => {
+const getStatisticPlayerService = async (id) => {
     try {
         let player = await db.Statistic.findAll({
             where: { playerId: id },
@@ -35,7 +35,7 @@ const handleCheckExits = async (id) => {
     return statistic;
 };
 
-export const createStatisticService = async (data) => {
+const createStatisticService = async (data) => {
     try {
         let check = await handleCheckStatisticExits(
             data.seasonId,
@@ -63,7 +63,7 @@ export const createStatisticService = async (data) => {
     }
 };
 
-export const updateStatisticService = async (data) => {
+const updateStatisticService = async (data) => {
     try {
         await db.Statistic.update(
             {
@@ -88,7 +88,7 @@ export const updateStatisticService = async (data) => {
     }
 };
 
-export const deleteStatisticService = async (id) => {
+const deleteStatisticService = async (id) => {
     try {
         console.log(id);
         let check = await handleCheckExits(id);
@@ -107,7 +107,7 @@ export const deleteStatisticService = async (id) => {
     }
 };
 
-export const getStatisticSeasonService = async (seasonId) => {
+const getStatisticSeasonService = async (seasonId) => {
     try {
         let statistics = await db.Statistic.findAll({
             where: { seasonId: seasonId },
@@ -125,4 +125,12 @@ export const getStatisticSeasonService = async (seasonId) => {
         console.log(err);
         return returnErrService();
     }
+};
+
+module.exports = {
+    createStatisticService,
+    deleteStatisticService,
+    getStatisticPlayerService,
+    getStatisticSeasonService,
+    updateStatisticService,
 };
