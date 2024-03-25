@@ -7,6 +7,7 @@ import playerController from "../controller/playerController";
 import statisticController from "../controller/statisticController";
 import matchController from "../controller/matchController";
 import scoredController from "../controller/scoredController";
+import calendarController from "../controller/calendarController";
 import { upload, uploadAvatar, uploadMatch } from "../middleware/multer";
 import jwtAction from "../middleware/jwtAction";
 import scored from "../models/scored";
@@ -103,6 +104,12 @@ const initApiRoutes = (app) => {
     router.delete("/delete-scored", scoredController.handleDeleteScored);
     router.post("/create-scored", scoredController.handleCreateScored);
     router.put("/update-scored", scoredController.handleUpdateScored);
+
+    //calendar
+    router.post("/create-calendar", calendarController.handleCreateCalendar);
+    router.get("/get-calender", calendarController.handleGetCalendar);
+    router.delete("/delete-calendar", calendarController.handleDeleteCalendar);
+    router.put("/update-calendar", calendarController.handleUpdateCalendar);
 
     return app.use("/v1", router);
 };

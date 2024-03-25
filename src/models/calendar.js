@@ -9,8 +9,6 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Calendar.hasMany(models.Statistic);
-            Calendar.belongsTo(models.Team);
         }
     }
 
