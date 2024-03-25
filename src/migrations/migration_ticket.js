@@ -15,6 +15,9 @@ module.exports = {
             isBooking: {
                 type: Sequelize.BOOLEAN,
             },
+            calendarId: {
+                type: Sequelize.INTEGER,
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

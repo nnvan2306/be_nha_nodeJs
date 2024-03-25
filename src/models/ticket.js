@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             name: DataTypes.INTEGER,
             isBooking: DataTypes.BOOLEAN,
+            calendarId: DataTypes.INTEGER,
         },
         {
             sequelize,

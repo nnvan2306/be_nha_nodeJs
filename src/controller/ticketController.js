@@ -1,5 +1,18 @@
 import funcReturn from "../helps/funcReturn";
 import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
+import ticketService from "../service/ticketService";
 
-module.exports = {};
+const handleCreateTicket = async (req, res) => {
+    try {
+        let fetch = await ticketService.createTicketService(+req.body.id);
+        return res
+            .status(fetch.errorCode === 0 ? 200 : 500)
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
+    }
+};
+
+module.exports = { handleCreateTicket };

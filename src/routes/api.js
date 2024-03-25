@@ -8,7 +8,9 @@ import statisticController from "../controller/statisticController";
 import matchController from "../controller/matchController";
 import scoredController from "../controller/scoredController";
 import calendarController from "../controller/calendarController";
+import ticketController from "../controller/ticketController";
 import { upload, uploadAvatar, uploadMatch } from "../middleware/multer";
+
 import jwtAction from "../middleware/jwtAction";
 import scored from "../models/scored";
 
@@ -110,6 +112,9 @@ const initApiRoutes = (app) => {
     router.get("/get-calender", calendarController.handleGetCalendar);
     router.delete("/delete-calendar", calendarController.handleDeleteCalendar);
     router.put("/update-calendar", calendarController.handleUpdateCalendar);
+
+    // ticket
+    router.post("/create-ticket", ticketController.handleCreateTicket);
 
     return app.use("/v1", router);
 };
