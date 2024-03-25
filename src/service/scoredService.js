@@ -52,7 +52,7 @@ const createScoredService = async (data) => {
 
 const updateScoredService = async (data) => {
     try {
-        let check = await    handleCheckExit(data.id);
+        let check = await handleCheckExit(data.id);
         if (!check) {
             return funcReturn("scored is not exit", 1, []);
         }
