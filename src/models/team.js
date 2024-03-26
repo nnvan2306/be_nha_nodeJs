@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "teamId",
             });
             Team.belongsToMany(models.Calendar, {
-                through: "Match_Team",
+                through: "Calendar_Team",
                 foreignKey: "teamId",
             });
         }
