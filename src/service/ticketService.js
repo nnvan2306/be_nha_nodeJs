@@ -29,4 +29,66 @@ const createTicketService = async (id) => {
     }
 };
 
-module.exports = { createTicketService };
+const updateTicketService = async (id) => {
+    try {
+        await db.Ticket.update(
+            {
+                isBooking: true,
+            },
+            {
+                where: { id: id },
+            }
+        );
+
+        return funcReturn("booking successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const deleteTicketService = async (id) => {
+    try {
+        await db.Ticket.destroy({
+            where: { id: id },
+        });
+        return funcReturn("delete ticket successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const getTicketService = async (id) => {
+    try {
+        let tickets = await db.Ticket.findAll({
+            where: { calendarId: id },
+        });
+
+        return funcReturn("tickets", 0, tickets);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const getTicketNoBookingService = async (id) => {
+    try {
+        let tickets = await db.Ticket.findAll({
+            where: { calendarId: id, isBooking: false },
+        });
+
+        return funcReturn("tickets", 0, tickets);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+module.exports = {
+    createTicketService,
+    updateTicketService,
+    deleteTicketService,
+    getTicketService,
+    getTicketNoBookingService,
+};

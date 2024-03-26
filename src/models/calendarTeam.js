@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class Calendar extends Model {
+    class Calendar_Team extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -9,22 +9,18 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Calendar.hasMany(models.Ticket);
         }
     }
 
-    Calendar.init(
+    Calendar_Team.init(
         {
-            hostId: DataTypes.INTEGER,
-            guestId: DataTypes.INTEGER,
-            date: DataTypes.STRING,
-            hour: DataTypes.STRING,
-            stadiumId: DataTypes.INTEGER,
+            calendarId: DataTypes.INTEGER,
+            teamId: DataTypes.INTEGER,
         },
         {
             sequelize,
-            modelName: "Calendar",
+            modelName: "Calendar_Team",
         }
     );
-    return Calendar;
+    return Calendar_Team;
 };

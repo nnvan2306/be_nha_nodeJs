@@ -115,6 +115,13 @@ const initApiRoutes = (app) => {
 
     // ticket
     router.post("/create-ticket", ticketController.handleCreateTicket);
+    router.patch("/update-ticket", ticketController.handleUpdateTicket);
+    router.delete("/delete-ticket", ticketController.handleDeleteTicket);
+    router.get("/get-ticket", ticketController.handleGetTicket);
+    router.get(
+        "/get-ticket-not-booking",
+        ticketController.handleGetTicketNotBooking
+    );
 
     return app.use("/v1", router);
 };
