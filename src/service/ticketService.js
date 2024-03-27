@@ -31,9 +31,16 @@ const createTicketService = async (id) => {
 
 const updateTicketService = async (id) => {
     try {
+        let ticket = await db.Ticket.findOne({
+            where: { id: id },
+        });
+        if (!ticket) {
+            return funcReturn("ticket don't exits", 1, []);
+        }
+
         await db.Ticket.update(
             {
-                isBooking: true,
+                isBooking: ticket.isBooking ? false : true,
             },
             {
                 where: { id: id },
@@ -61,8 +68,6 @@ const deleteTicketService = async (id) => {
 
 const getTicketService = async (id) => {
     try {
-        console.log(id);
-        console.log(typeof id);
         let tickets = await db.Ticket.findAll({
             where: { calendarId: id },
         });

@@ -1,6 +1,5 @@
 import funcReturn from "../helps/funcReturn";
 import returnErrService from "../helps/returnErrService";
-import returnInfoEmpty from "../helps/returnInfoEmpty";
 import ticketService from "../service/ticketService";
 
 const handleCreateTicket = async (req, res) => {
@@ -17,7 +16,7 @@ const handleCreateTicket = async (req, res) => {
 
 const handleUpdateTicket = async (req, res) => {
     try {
-        let fetch = ticketService.updateTicketService(+req.body.id);
+        let fetch = await ticketService.updateTicketService(+req.body.id);
 
         return res
             .status(
