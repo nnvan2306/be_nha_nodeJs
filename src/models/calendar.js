@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
             Calendar.hasMany(models.Ticket);
             Calendar.belongsTo(models.Stadium);
+            Calendar.belongsToMany(models.Team, {
+                through: "Calendar_Team",
+                foreignKey: "calendarId",
+            });
         }
     }
 

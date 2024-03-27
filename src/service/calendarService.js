@@ -1,17 +1,52 @@
 import returnErrService from "../helps/returnErrService";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
+import calendarTeamService from "../service/calendarTeamService";
 const { Op } = require("sequelize");
-import ticketService from "./ticketService";
+
+const handleGetOneCalendar = async (data) => {
+    let calendar = await db.Calendar.findOne({
+        where: { hostId: data.hostId, guestId: data.guestId },
+    });
+
+    return calendar;
+};
+
+const handleGetCalendarById = async (id) => {
+    let calendar = await db.Calendar.findOne({
+        where: { id: id },
+    });
+    return calendar;
+};
 
 const crateCalendarService = async (data) => {
     try {
+        const checkExits = await handleGetOneCalendar(data);
+        if (checkExits) {
+            return funcReturn("calendar is exits !", 1, []);
+        }
+
         await db.Calendar.create({
             hostId: data.hostId,
             guestId: data.guestId,
             date: data.date,
             hour: data.hour,
+            stadiumId: data.stadiumId,
         });
+
+        const getCalendar = await handleGetOneCalendar(data);
+
+        let createCalendarTeam =
+            await calendarTeamService.createCalendarTeamService(
+                getCalendar.hostId,
+                getCalendar.guestId,
+                getCalendar.id
+            );
+
+        if (createCalendarTeam.errorCode !== 0) {
+            await deleteCalendarService(getCalendar.id);
+            return funcReturn("create calendar error", 1, []);
+        }
 
         return funcReturn("create calendar successfully", 0, []);
     } catch (err) {
@@ -34,6 +69,12 @@ const getCalendarService = async (data) => {
                         { guestId: data.guestId },
                     ],
                 },
+                include: [
+                    {
+                        model: db.Team,
+                    },
+                    { model: db.Stadium },
+                ],
             });
         } else if (!data.guestId) {
             calendars = await db.Calendar.findAll({
@@ -43,19 +84,46 @@ const getCalendarService = async (data) => {
                         { guestId: data.hostId },
                     ],
                 },
+                include: [
+                    {
+                        model: db.Team,
+                    },
+                    { model: db.Stadium },
+                ],
             });
         } else {
-            calendars = await db.Calendar.findAll({
-                where: {
-                    [Op.or]: [
-                        { hostId: data.hostId, guestId: data.guestId },
-                        { hostId: data.guestId, guestId: data.hostId },
+            if (data.hostId === data.guestId) {
+                calendars = await db.Calendar.findAll({
+                    where: {
+                        [Op.or]: [
+                            { hostId: data.hostId },
+                            { guestId: data.hostId },
+                        ],
+                    },
+                    include: [
+                        {
+                            model: db.Team,
+                        },
+                        { model: db.Stadium },
                     ],
-                },
-            });
+                });
+            } else {
+                calendars = await db.Calendar.findAll({
+                    where: {
+                        [Op.or]: [
+                            { hostId: data.hostId, guestId: data.guestId },
+                            { hostId: data.guestId, guestId: data.hostId },
+                        ],
+                    },
+                    include: [
+                        {
+                            model: db.Team,
+                        },
+                        { model: db.Stadium },
+                    ],
+                });
+            }
         }
-
-        console.log(calendars);
 
         return funcReturn("calendars", 0, calendars);
     } catch (err) {
@@ -69,10 +137,11 @@ const deleteCalendarService = async (id) => {
         if (!id) {
             return funcReturn("id mustn't empty !", 1, []);
         }
-
         await db.Calendar.destroy({
             where: { id: id },
         });
+
+        await calendarTeamService.deleteCalendarTeamService(id);
         return funcReturn("delete calendar successfully", 0, []);
     } catch (err) {
         console.log(err);
@@ -82,12 +151,32 @@ const deleteCalendarService = async (id) => {
 
 const updateCalendarService = async (data) => {
     try {
+        const calendarOld = await handleGetCalendarById(data.id);
+
+        if (
+            data.hostId !== calendarOld.hostId ||
+            data.guestId !== calendarOld.guestId
+        ) {
+            const updateCalendarTeam =
+                await calendarTeamService.updateCalendarTeamService(
+                    calendarOld.hostId,
+                    calendarOld.guestId,
+                    data.hostId,
+                    data.guestId,
+                    data.id
+                );
+            if (updateCalendarTeam.errorCode !== 0) {
+                return funcReturn("update error", 1, []);
+            }
+        }
+
         await db.Calendar.update(
             {
                 hostId: data.hostId,
                 guestId: data.guestId,
                 date: data.date,
                 hour: data.hour,
+                stadiumId: data.stadiumId,
             },
             {
                 where: { id: data.id },

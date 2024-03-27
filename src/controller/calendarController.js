@@ -6,7 +6,13 @@ import calendarService from "../service/calendarService";
 const handleCreateCalendar = async (req, res) => {
     try {
         let data = req.body;
-        if (!data.hostId || !data.guestId || !data.date || !data.hour) {
+        if (
+            !data.hostId ||
+            !data.guestId ||
+            !data.date ||
+            !data.hour ||
+            !data.stadiumId
+        ) {
             return res.status(400).json(returnInfoEmpty());
         }
         if (data.guestId === data.hostId) {
@@ -18,6 +24,7 @@ const handleCreateCalendar = async (req, res) => {
             ...data,
             hostId: +data.hostId,
             guestId: +data.guestId,
+            stadiumId: +data.stadiumId,
         };
         let fetch = await calendarService.crateCalendarService(dataBuider);
 
@@ -33,8 +40,8 @@ const handleCreateCalendar = async (req, res) => {
 const handleGetCalendar = async (req, res) => {
     try {
         let dataBuider = {
-            hostId: req.query.hostId,
-            guestId: req.query.guestId,
+            hostId: +req.query.hostId,
+            guestId: +req.query.guestId,
         };
 
         let fetch = await calendarService.getCalendarService(dataBuider);
@@ -70,7 +77,8 @@ const handleUpdateCalendar = async (req, res) => {
             !data.hostId ||
             !data.guestId ||
             !data.date ||
-            !data.hour
+            !data.hour ||
+            !data.stadiumId
         ) {
             return res.status(400).json(returnInfoEmpty());
         }
@@ -79,6 +87,7 @@ const handleUpdateCalendar = async (req, res) => {
             ...data,
             hostId: +data.hostId,
             guestId: +data.guestId,
+            stadiumId: data.stadiumId,
         };
 
         let fetch = await calendarService.updateCalendarService(dataBuider);
