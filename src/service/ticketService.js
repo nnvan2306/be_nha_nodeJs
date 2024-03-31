@@ -2,34 +2,7 @@ import returnErrService from "../helps/returnErrService";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
 
-// const createTicketService = async (id) => {
-//     try {
-//         for (let i = 0; i < 50; i++) {
-//             await db.Ticket.create({
-//                 name: `${
-//                     i < 10
-//                         ? "A"
-//                         : i < 20
-//                         ? "B"
-//                         : i < 30
-//                         ? "C"
-//                         : i < 40
-//                         ? "D"
-//                         : "E"
-//                 }${i + 1}`,
-//                 isBooking: false,
-//                 calendarId: id,
-//             });
-//         }
-
-//         return funcReturn("create tickets successfully", 0, []);
-//     } catch (err) {
-//         console.log(err);
-//         return returnErrService();
-//     }
-// };
-
-const handleCheckExits = async (name, firstIndex, lastIndex) => {
+const handleCheckExits = async (name, firstIndex, lastIndex, id) => {
     for (let i = firstIndex; i <= lastIndex; i++) {
         let ticket = await db.Ticket.findOne({
             where: { name: `${name}${i}`, calendarId: id },
@@ -50,10 +23,10 @@ const createTicketService = async (data) => {
             data.calendarId
         );
         if (check) {
-            return funcReturn(`${ticket.name} is exits`, 1, []);
+            return funcReturn(`${check.name} is exits`, 1, []);
         }
 
-        for (let i = firstIndex; i <= lastIndex; i++) {
+        for (let i = data.firstIndex; i <= data.lastIndex; i++) {
             await db.Ticket.create({
                 name: `${data.name}${i}`,
                 price: data.price,
@@ -64,35 +37,6 @@ const createTicketService = async (data) => {
         }
 
         return funcReturn("create tickets successfully", 0, []);
-    } catch (err) {
-        console.log(err);
-        return returnErrService();
-    }
-};
-
-const updateTicketService = async (data) => {
-    try {
-        let ticket = await db.Ticket.findOne({
-            where: { id: data.id },
-        });
-        if (!ticket) {
-            return funcReturn("ticket don't exits", 1, []);
-        }
-
-        await db.Ticket.update(
-            {
-                name: data.name,
-                isVip: data.isVip,
-                price: data.price,
-                isBooking: data.isBooking,
-                calendarId: ticket.calendarId,
-            },
-            {
-                where: { id: data.id },
-            }
-        );
-
-        return funcReturn("booking successfully", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();
@@ -162,9 +106,38 @@ const getTicketNoBookingService = async (id) => {
     }
 };
 
+// const updateTicketService = async (data) => {
+//     try {
+//         let ticket = await db.Ticket.findOne({
+//             where: { id: data.id },
+//         });
+//         if (!ticket) {
+//             return funcReturn("ticket don't exits", 1, []);
+//         }
+
+//         await db.Ticket.update(
+//             {
+//                 name: data.name,
+//                 isVip: data.isVip,
+//                 price: data.price,
+//                 isBooking: data.isBooking,
+//                 calendarId: ticket.calendarId,
+//             },
+//             {
+//                 where: { id: data.id },
+//             }
+//         );
+
+//         return funcReturn("booking successfully", 0, []);
+//     } catch (err) {
+//         console.log(err);
+//         return returnErrService();
+//     }
+// };
+
 module.exports = {
     createTicketService,
-    updateTicketService,
+    // updateTicketService,
     updateBookingTicketService,
     deleteTicketService,
     getTicketService,

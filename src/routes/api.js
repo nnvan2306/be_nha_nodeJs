@@ -122,12 +122,16 @@ const initApiRoutes = (app) => {
 
     // ticket
     router.post("/create-ticket", ticketController.handleCreateTicket);
-    router.put("/update-ticket", ticketController.handleUpdateTicket);
+    // router.put("/update-ticket", ticketController.handleUpdateTicket);
     router.patch(
         "/update-booking-ticket",
         ticketController.handleUpdateBookingTicket
     );
     router.delete("/delete-ticket", ticketController.handleDeleteTicket);
+    router.delete(
+        "/delete-multiple-ticket",
+        ticketController.handleSeleteMultipleTicket
+    );
     router.get("/get-ticket", ticketController.handleGetTicket);
     router.get(
         "/get-ticket-not-booking",
