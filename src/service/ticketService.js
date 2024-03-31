@@ -57,6 +57,7 @@ const createTicketService = async (data) => {
             await db.Ticket.create({
                 name: `${data.name}${i}`,
                 price: data.price,
+                isVip: data.isVip,
                 isBooking: false,
                 calendarId: data.calendarId,
             });
@@ -72,7 +73,7 @@ const createTicketService = async (data) => {
 const updateTicketService = async (data) => {
     try {
         let ticket = await db.Ticket.findOne({
-            where: { id: id },
+            where: { id: data.id },
         });
         if (!ticket) {
             return funcReturn("ticket don't exits", 1, []);
@@ -80,10 +81,14 @@ const updateTicketService = async (data) => {
 
         await db.Ticket.update(
             {
-                isBooking: ticket.isBooking ? false : true,
+                name: data.name,
+                isVip: data.isVip,
+                price: data.price,
+                isBooking: data.isBooking,
+                calendarId: ticket.calendarId,
             },
             {
-                where: { id: id },
+                where: { id: data.id },
             }
         );
 

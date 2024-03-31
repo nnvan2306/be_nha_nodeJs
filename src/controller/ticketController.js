@@ -44,6 +44,7 @@ const handleCreateTicket = async (req, res) => {
         }
 
         let dataBuider = {
+            ...data,
             name: data.name.toUpperCase(),
             firstIndex: +data.firstIndex,
             lastIndex: +data.lastIndex,
@@ -81,12 +82,10 @@ const handleUpdateTicket = async (req, res) => {
         }
 
         let dataBuider = {
+            ...data,
             id: +data.id,
             name: data.name.toUpperCase(),
-            firstIndex: +data.firstIndex,
-            lastIndex: +data.lastIndex,
             price: +data.price,
-            calendarId: +data.calendarId,
         };
 
         let fetch = await ticketService.updateTicketService(dataBuider);

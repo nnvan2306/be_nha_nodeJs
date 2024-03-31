@@ -12,6 +12,12 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
             },
+            isVip: {
+                type: Sequelize.BOOLEAN,
+            },
+            price: {
+                type: Sequelize.INTEGER,
+            },
             isBooking: {
                 type: Sequelize.BOOLEAN,
             },
