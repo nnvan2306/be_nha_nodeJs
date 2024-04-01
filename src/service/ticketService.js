@@ -106,6 +106,35 @@ const getTicketNoBookingService = async (id) => {
     }
 };
 
+const deleteMultipleTicketService = async (arr) => {
+    try {
+        for (let i = 0; i < arr.length; i++) {
+            await db.Ticket.destroy({
+                where: { id: arr[i] },
+            });
+        }
+
+        return funcReturn("delete successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const deleteAllTicketService = async (calendarId) => {
+    try {
+        await db.Ticket.destroy({
+            where: {
+                calendarId: calendarId,
+            },
+        });
+        return funcReturn("delete successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 // const updateTicketService = async (data) => {
 //     try {
 //         let ticket = await db.Ticket.findOne({
@@ -140,6 +169,8 @@ module.exports = {
     // updateTicketService,
     updateBookingTicketService,
     deleteTicketService,
+    deleteMultipleTicketService,
+    deleteAllTicketService,
     getTicketService,
     getTicketNoBookingService,
 };

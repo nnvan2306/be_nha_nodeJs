@@ -147,9 +147,32 @@ const handleGetTicketNotBooking = async (req, res) => {
     }
 };
 
-const handleSeleteMultipleTicket = async (req, res) => {
+const handleDeleteMultipleTicket = async (req, res) => {
     try {
-        console.log(req.body);
+        if (req.body.listTicket.length === 0) {
+            return res.status(200).json(funcReturn("delete", 0, []));
+        }
+
+        let fetch = await ticketService.deleteMultipleTicketService(
+            req.body.listTicket
+        );
+        return res
+            .status(fetch.errorCode === 0 ? 200 : 500)
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json(returnErrService());
+    }
+};
+
+const handleDeleteAllTicket = async (req, res) => {
+    try {
+        let fetch = await ticketService.deleteAllTicketService(
+            +req.query.calendarId
+        );
+        return res
+            .status(fetch.errorCode === 0 ? 200 : 500)
+            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
     } catch (err) {
         console.log(err);
         return res.status(500).json(returnErrService());
@@ -161,7 +184,8 @@ module.exports = {
     // handleUpdateTicket,
     handleUpdateBookingTicket,
     handleDeleteTicket,
-    handleSeleteMultipleTicket,
+    handleDeleteMultipleTicket,
+    handleDeleteAllTicket,
     handleGetTicket,
     handleGetTicketNotBooking,
 };

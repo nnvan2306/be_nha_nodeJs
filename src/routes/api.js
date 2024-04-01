@@ -130,8 +130,9 @@ const initApiRoutes = (app) => {
     router.delete("/delete-ticket", ticketController.handleDeleteTicket);
     router.delete(
         "/delete-multiple-ticket",
-        ticketController.handleSeleteMultipleTicket
+        ticketController.handleDeleteMultipleTicket
     );
+    router.delete("/delete-all-ticket", ticketController.handleDeleteAllTicket);
     router.get("/get-ticket", ticketController.handleGetTicket);
     router.get(
         "/get-ticket-not-booking",
