@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             Stadium.hasMany(models.Calendar);
+            Stadium.hasMany(models.Stand);
         }
     }
 

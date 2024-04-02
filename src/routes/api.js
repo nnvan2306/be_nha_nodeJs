@@ -10,6 +10,7 @@ import scoredController from "../controller/scoredController";
 import calendarController from "../controller/calendarController";
 import ticketController from "../controller/ticketController";
 import stadiumController from "../controller/stadiumController";
+import standController from "../controller/standController";
 import {
     upload,
     uploadAvatar,
@@ -126,6 +127,10 @@ const initApiRoutes = (app) => {
         uploadStadium.single("file"),
         stadiumController.handleUpdateStadium
     );
+
+    //stand
+    router.post("/create-stand", standController.handleCreateStand);
+    router.post("/delete-stand", standController.handleDeleteStand);
 
     //calendar
     router.post("/create-calendar", calendarController.handleCreateCalendar);
