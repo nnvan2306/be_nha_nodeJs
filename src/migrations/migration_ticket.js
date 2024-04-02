@@ -18,8 +18,11 @@ module.exports = {
             price: {
                 type: Sequelize.INTEGER,
             },
-            isBooking: {
-                type: Sequelize.BOOLEAN,
+            // isBooking: {
+            //     type: Sequelize.BOOLEAN,
+            // },
+            totalTicket: {
+                type: Sequelize.INTEGER,
             },
             calendarId: {
                 type: Sequelize.INTEGER,

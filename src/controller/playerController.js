@@ -100,7 +100,6 @@ const handleDeletePlayer = async (req, res) => {
 
 const handleUpdatePlayer = async (req, res) => {
     let player = JSON.parse(JSON.stringify(req.body));
-    console.log(player);
     try {
         if (
             !player.id ||

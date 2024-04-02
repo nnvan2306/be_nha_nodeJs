@@ -10,7 +10,12 @@ import scoredController from "../controller/scoredController";
 import calendarController from "../controller/calendarController";
 import ticketController from "../controller/ticketController";
 import stadiumController from "../controller/stadiumController";
-import { upload, uploadAvatar, uploadMatch } from "../middleware/multer";
+import {
+    upload,
+    uploadAvatar,
+    uploadMatch,
+    uploadStadium,
+} from "../middleware/multer";
 
 import jwtAction from "../middleware/jwtAction";
 import scored from "../models/scored";
@@ -109,10 +114,18 @@ const initApiRoutes = (app) => {
     router.put("/update-scored", scoredController.handleUpdateScored);
 
     //stadium
-    router.post("/create-stadium", stadiumController.handleCreateStadium);
+    router.post(
+        "/create-stadium",
+        uploadStadium.single("file"),
+        stadiumController.handleCreateStadium
+    );
     router.get("/get-stadium", stadiumController.handleGetStadium);
     router.delete("/delete-stadium", stadiumController.handleDeleteStadium);
-    router.put("/update-stadium", stadiumController.handleUpdateStadium);
+    router.put(
+        "/update-stadium",
+        uploadStadium.single("file"),
+        stadiumController.handleUpdateStadium
+    );
 
     //calendar
     router.post("/create-calendar", calendarController.handleCreateCalendar);

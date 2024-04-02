@@ -41,3 +41,17 @@ export const handleRemoveMatch = (path) => {
         return false;
     }
 };
+
+export const handleRemoveStadiumImage = (path) => {
+    if (path) {
+        fs.unlink(`./src/public/stadiums/${path}`, (err) => {
+            if (err) {
+                console.error(err);
+                return false;
+            }
+        });
+        return true;
+    } else {
+        return false;
+    }
+};

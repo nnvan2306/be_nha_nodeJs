@@ -21,6 +21,7 @@ const handleCreateTeam = async (req, res) => {
         ) {
             return res.status(400).json(returnInfoEmpty());
         }
+
         let dataBuider = {
             code: team.code,
             name: team.name,

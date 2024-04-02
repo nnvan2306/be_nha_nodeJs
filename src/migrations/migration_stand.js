@@ -2,21 +2,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable("Stadia", {
+        await queryInterface.createTable("Stands", {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
+            isReady: {
+                type: Sequelize.BOOLEAN,
+            },
             name: {
                 type: Sequelize.STRING,
             },
-            location: {
-                type: Sequelize.STRING,
-            },
-            stadiumImage_url: {
-                type: Sequelize.STRING,
+            stadiumId: {
+                type: Sequelize.INTEGER,
             },
             createdAt: {
                 allowNull: false,

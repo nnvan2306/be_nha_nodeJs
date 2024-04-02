@@ -31,7 +31,7 @@ const createTicketService = async (data) => {
                 name: `${data.name}${i}`,
                 price: data.price,
                 isVip: data.isVip,
-                isBooking: false,
+                totalTicket: data.totalTicket,
                 calendarId: data.calendarId,
             });
         }
@@ -43,10 +43,10 @@ const createTicketService = async (data) => {
     }
 };
 
-const updateBookingTicketService = async (id) => {
+const updateBookingTicketService = async (data) => {
     try {
         let ticket = await db.Ticket.findOne({
-            where: { id: id },
+            where: { id: data.id },
         });
         if (!ticket) {
             return funcReturn("ticket don't exits", 1, []);
@@ -54,10 +54,10 @@ const updateBookingTicketService = async (id) => {
 
         await db.Ticket.update(
             {
-                isBooking: ticket.isBooking ? false : true,
+                totalTicket: ticket.totalTicket - data.totalTicketBooking,
             },
             {
-                where: { id: id },
+                where: { id: data.id },
             }
         );
 
@@ -84,19 +84,6 @@ const getTicketService = async (id) => {
     try {
         let tickets = await db.Ticket.findAll({
             where: { calendarId: id },
-        });
-
-        return funcReturn("tickets", 0, tickets);
-    } catch (err) {
-        console.log(err);
-        return returnErrService();
-    }
-};
-
-const getTicketNoBookingService = async (id) => {
-    try {
-        let tickets = await db.Ticket.findAll({
-            where: { calendarId: id, isBooking: false },
         });
 
         return funcReturn("tickets", 0, tickets);

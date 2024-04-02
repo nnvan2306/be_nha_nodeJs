@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     Stadium.init(
         {
             name: DataTypes.STRING,
+            location: DataTypes.STRING,
+            stadiumImage_url: DataTypes.STRING,
         },
         {
             sequelize,

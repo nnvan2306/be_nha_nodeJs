@@ -1,11 +1,25 @@
 import db from "../models/index";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
+import { handleRemoveStadiumImage } from "../middleware/removeImage";
+
+const handleCheckStadium = async (name) => {
+    let stadium = await db.Stadium.findOne({
+        where: { name: name },
+    });
+    return stadium;
+};
 
 const createStadiumService = async (data) => {
     try {
+        let checkExits = await handleCheckStadium(data.name);
+        if (!checkExits) {
+            return funcReturn(`${data.name} is Exits !`, 1, []);
+        }
         await db.Stadium.create({
             name: data.name,
+            location: data.location,
+            stadiumImage_url: `/images/${data.stadiumImage_url}`,
         });
 
         return funcReturn("create stadium successfully", 0, []);
@@ -27,9 +41,18 @@ const getStadiumService = async () => {
 
 const deleteStadiumService = async (id) => {
     try {
+        let check = await handleCheckExits(code);
+
+        let path = check.stadiumImage_url.split("/images/")[1];
+
+        if (!handleRemoveStadiumImage(path)) {
+            return funcReturn("delete error", 1, []);
+        }
+
         await db.Stadium.destroy({
             where: { id: id },
         });
+
         return funcReturn("delete stadium successfully", 0, []);
     } catch (err) {
         console.log(err);
@@ -39,12 +62,28 @@ const deleteStadiumService = async (id) => {
 
 const updateStadiumService = async (data) => {
     try {
-        await db.Stadium.update(
-            {
-                name: data.name,
-            },
-            { where: { id: data.id } }
-        );
+        if (!data.isChangeFile) {
+            await db.Stadium.update(
+                {
+                    name: data.name,
+                    location: data.location,
+                },
+                { where: { id: data.id } }
+            );
+        } else {
+            let path = data.stadiumImage_url.split("/images/")[1];
+            if (!handleRemoveStadiumImage(path)) {
+                return funcReturn("updtae error", 1, []);
+            }
+            await db.Stadium.update(
+                {
+                    name: data.name,
+                    location: data.location,
+                    stadiumImage_url: `/images/${data.stadiumImage}`,
+                },
+                { where: { id: data.id } }
+            );
+        }
 
         return funcReturn("update successfully", 0, []);
     } catch (err) {
