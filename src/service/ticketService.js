@@ -49,6 +49,28 @@ const createTicketService = async (data) => {
     }
 };
 
+const updateTicketService = async (data) => {
+    try {
+        await db.Ticket.update(
+            {
+                name: data.name,
+                isVip: data.isVip,
+                price: data.price,
+                totalTicket: data.totalTicket,
+                calendarId: data.calendarId,
+            },
+            {
+                where: { id: data.id },
+            }
+        );
+
+        return funcReturn("update tickets successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 const updateBookingTicketService = async (data) => {
     try {
         let ticket = await db.Ticket.findOne({
@@ -74,40 +96,16 @@ const updateBookingTicketService = async (data) => {
     }
 };
 
-const deleteTicketService = async (id) => {
+const deleteTicketService = async (data) => {
+    //data is array
     try {
-        await db.Ticket.destroy({
-            where: { id: id },
-        });
-        return funcReturn("delete ticket successfully", 0, []);
-    } catch (err) {
-        console.log(err);
-        return returnErrService();
-    }
-};
-
-const getTicketService = async (id) => {
-    try {
-        let tickets = await db.Ticket.findAll({
-            where: { calendarId: id },
-        });
-
-        return funcReturn("tickets", 0, tickets);
-    } catch (err) {
-        console.log(err);
-        return returnErrService();
-    }
-};
-
-const deleteMultipleTicketService = async (arr) => {
-    try {
-        for (let i = 0; i < arr.length; i++) {
+        await data.forEach(async (item) => {
             await db.Ticket.destroy({
-                where: { id: arr[i] },
+                where: { id: item.id },
             });
-        }
+        });
 
-        return funcReturn("delete successfully", 0, []);
+        return funcReturn("delete ticket successfully", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();
@@ -128,42 +126,33 @@ const deleteAllTicketService = async (calendarId) => {
     }
 };
 
-// const updateTicketService = async (data) => {
-//     try {
-//         let ticket = await db.Ticket.findOne({
-//             where: { id: data.id },
-//         });
-//         if (!ticket) {
-//             return funcReturn("ticket don't exits", 1, []);
-//         }
+const getTicketService = async (calendarId) => {
+    try {
+        let tickets = await db.Ticket.findAll({
+            where: { calendarId: calendarId },
+            include: {
+                model: db.Calendar,
+                include: {
+                    model: db.Stadium,
+                    include: {
+                        model: db.Stand,
+                    },
+                },
+            },
+        });
 
-//         await db.Ticket.update(
-//             {
-//                 name: data.name,
-//                 isVip: data.isVip,
-//                 price: data.price,
-//                 isBooking: data.isBooking,
-//                 calendarId: ticket.calendarId,
-//             },
-//             {
-//                 where: { id: data.id },
-//             }
-//         );
-
-//         return funcReturn("booking successfully", 0, []);
-//     } catch (err) {
-//         console.log(err);
-//         return returnErrService();
-//     }
-// };
+        return funcReturn("tickets", 0, tickets);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
 
 module.exports = {
     createTicketService,
-    // updateTicketService,
     updateBookingTicketService,
     deleteTicketService,
-    deleteMultipleTicketService,
     deleteAllTicketService,
     getTicketService,
-    // getTicketNoBookingService,
+    updateTicketService,
 };
