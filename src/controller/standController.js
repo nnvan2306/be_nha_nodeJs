@@ -1,21 +1,25 @@
 import funcReturn from "../helps/funcReturn";
 import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
-import standService from "../service/stadiumService";
+import stand from "../models/stand";
+import standService from "../service/standService";
 
 class standController {
     async handleCreateStand(req, res) {
         try {
             let stand = req.body;
-            if (!stand.listName || !stand.stadiumId) {
-                return res.status(404).json(returnInfoEmpty());
-            }
-            let dataBuider = {
-                ...stand,
-                stadiumId: +stand.stadiumId,
-            };
 
-            let fetch = await standService.createStandService(dataBuider);
+            stand.forEach((item) => {
+                if (
+                    !item.name ||
+                    !item.priceDefault ||
+                    !item.totalTicketDefault
+                ) {
+                    return res.status(404).json(returnInfoEmpty());
+                }
+            });
+
+            let fetch = await standService.createStandService(stand);
             return res
                 .status(
                     fetch.errorCode === 0
@@ -33,11 +37,12 @@ class standController {
 
     async handleDeleteStand(req, res) {
         try {
-            if (!req.query.id) {
+            let stands = req.body;
+            if (stands.length === 0) {
                 return res.status(404).json(returnInfoEmpty());
             }
 
-            let fetch = await standService.deleteStandService(+req.query.id);
+            let fetch = await standService.deleteStandService(stands);
             return res
                 .status(fetch.errorCode === 0 ? 200 : 500)
                 .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
@@ -64,16 +69,19 @@ class standController {
 
     async handleUpdateStand(req, res) {
         try {
-            let stand = req.body;
-            if (!stand.listName || !stand.stadiumId) {
-                return res.status(404).json(returnInfoEmpty());
-            }
-            let dataBuider = {
-                ...stand,
-                stadiumId: +stand.stadiumId,
-                id: +stand.id,
-            };
-            let fetch = await standService.updateStandService(dataBuider);
+            let stands = req.body;
+            stands.forEach((item) => {
+                if (
+                    !item.id ||
+                    !item.name ||
+                    !item.priceDefault ||
+                    !item.totalTicketDefault
+                ) {
+                    return res.status(404).json(returnInfoEmpty());
+                }
+            });
+
+            let fetch = await standService.updateStandService(stands);
 
             return res
                 .status(fetch.errorCode === 0 ? 200 : 500)

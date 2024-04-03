@@ -130,7 +130,7 @@ const initApiRoutes = (app) => {
 
     //stand
     router.post("/create-stand", standController.handleCreateStand);
-    router.post("/delete-stand", standController.handleDeleteStand);
+    router.delete("/delete-stand", standController.handleDeleteStand);
     router.get("/get-stand", standController.handleGetStand);
     router.put("/update-stand", standController.handleUpdateStand);
 

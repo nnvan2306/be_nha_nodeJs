@@ -10,6 +10,14 @@ const handleCheckStadium = async (name) => {
     return stadium;
 };
 
+const handleCheckExits = async (id) => {
+    let stadium = await db.Stadium.findOne({
+        where: { id: id },
+    });
+
+    return stadium;
+};
+
 const createStadiumService = async (data) => {
     try {
         let checkExits = await handleCheckStadium(data.name);
@@ -41,7 +49,7 @@ const getStadiumService = async () => {
 
 const deleteStadiumService = async (id) => {
     try {
-        let check = await handleCheckExits(code);
+        let check = await handleCheckExits(id);
 
         let path = check.stadiumImage_url.split("/images/")[1];
 
@@ -62,6 +70,7 @@ const deleteStadiumService = async (id) => {
 
 const updateStadiumService = async (data) => {
     try {
+        console.log(data);
         if (!data.isChangeFile) {
             await db.Stadium.update(
                 {

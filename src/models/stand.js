@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             isReady: DataTypes.BOOLEAN,
             name: DataTypes.STRING,
+            isVipDefault: DataTypes.BOOLEAN,
             priceDefault: DataTypes.INTEGER,
             totalTicketDefault: DataTypes.INTEGER,
             stadiumId: DataTypes.INTEGER,

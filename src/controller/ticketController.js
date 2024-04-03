@@ -3,39 +3,23 @@ import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
 import ticketService from "../service/ticketService";
 
-// const handleCheckTypeName = (name) => {
-//     if (
-//         name.charCodeAt(0) < 65 ||
-//         name.charCodeAt(0) > 90 ||
-//         (name.charCodeAt(1) >= 65 && name.charCodeAt(1) <= 90)
-//     ) {
-//         return false;
-//     }
-//     return true;
-// };
-
 class TicketController {
     async handleCreateTicket(req, res) {
         try {
-            let data = req.body;
-            if (
-                !data.listName ||
-                !data.price ||
-                !data.totalTicket ||
-                !data.calendarId
-            ) {
-                return res.status(404).json(returnInfoEmpty());
-            }
+            let tickets = req.body;
 
-            //check type name
+            tickets.forEach((item) => {
+                if (
+                    !item.name ||
+                    !item.price ||
+                    !item.totalTicket ||
+                    !item.calendarId
+                ) {
+                    return res.status(404).json(returnInfoEmpty());
+                }
+            });
 
-            let dataBuider = {
-                ...data,
-                totalTicket: +data.totalTicket,
-                price: +data.price,
-                calendarId: +data.calendarId,
-            };
-            let fetch = await ticketService.createTicketService(dataBuider);
+            let fetch = await ticketService.createTicketService(tickets);
             return res
                 .status(fetch.errorCode === 0 ? 200 : 500)
                 .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));

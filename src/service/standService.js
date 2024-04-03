@@ -2,32 +2,48 @@ import db from "../models/index";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
 
-const handleCheckExits = async (listName, stadiumId) => {
-    listName.forEach(async (item) => {
-        let stand = await db.Stand.findOne({
-            where: { name: item, stadiumId: stadiumId },
-        });
-        if (stand) {
-            return true;
+const handleCheckExits = async (array) => {
+    for (const item of array) {
+        {
+            let stand = await db.Stand.findOne({
+                where: { name: item.name, stadiumId: item.stadiumId },
+            });
+            if (stand) {
+                return item.name;
+            }
         }
-    });
+    }
     return false;
 };
 
 const createStandService = async (data) => {
     try {
-        let stand = await handleCheckExits(data.name, data.stadiumId);
+        //check exits
+        let stand = await handleCheckExits(data);
         if (stand) {
-            return funcReturn(`stand ${data.name}  is exits !`, 1, []);
+            return funcReturn(`stand ${stand} is exits !`, 1, []);
         }
 
-        data.listName.forEach(async (item) => {
+        //check duplicate
+        for (let i = 0; i < data.length - 1; i++) {
+            for (let j = i + 1; j < data.length; j++) {
+                if (data[i].name === data[j].name) {
+                    return funcReturn(`stands mustn't duplicate `, 1, []);
+                }
+            }
+        }
+
+        //create
+        for (const item of data) {
             await db.Stand.create({
-                name: item,
+                name: item.name,
                 isReady: item.isReady,
-                stadiumId: data.stadiumId,
+                isVipDefault: item.isVipDefault,
+                priceDefault: item.priceDefault,
+                totalTicketDefault: item.totalTicketDefault,
+                stadiumId: item.stadiumId,
             });
-        });
+        }
 
         return funcReturn("create successfully", 0, []);
     } catch (err) {
@@ -36,10 +52,12 @@ const createStandService = async (data) => {
     }
 };
 
-const deleteStandService = async (id) => {
+const deleteStandService = async (data) => {
     try {
-        await db.Stand.destroy({
-            where: { id: id },
+        data.forEach(async (item) => {
+            await db.Stand.destroy({
+                where: { id: item.id },
+            });
         });
 
         return funcReturn("delete successfully", 0, []);
@@ -66,16 +84,21 @@ const getStandService = async (stadiumId) => {
 
 const updateStandService = async (data) => {
     try {
-        await db.Stand.update(
-            {
-                name: data.name,
-                isReady: data.isReady,
-                stadiumId: data.stadiumId,
-            },
-            {
-                where: { id: data.id },
-            }
-        );
+        data.forEach(async (item) => {
+            await db.Stand.update(
+                {
+                    name: item.name,
+                    isReady: item.isReady,
+                    isVipDefault: item.isVipDefault,
+                    priceDefault: item.priceDefault,
+                    totalTicketDefault: item.totalTicketDefault,
+                    stadiumId: item.stadiumId,
+                },
+                {
+                    where: { id: item.id },
+                }
+            );
+        });
 
         return funcReturn("update stand successfully", 0, []);
     } catch (err) {

@@ -15,6 +15,9 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
             },
+            isVipDefault: {
+                type: Sequelize.BOOLEAN,
+            },
             priceDefault: {
                 type: Sequelize.INTEGER,
             },

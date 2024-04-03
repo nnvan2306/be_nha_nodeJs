@@ -2,13 +2,15 @@ import returnErrService from "../helps/returnErrService";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
 
-const handleCheckExits = async (calendarId, listName) => {
-    for (let i = firstIndex; i <= lastIndex; i++) {
-        let ticket = await db.Ticket.findOne({
-            where: { name: `${name}${i}`, calendarId: id },
-        });
-        if (ticket) {
-            return ticket;
+const handleCheckExits = async (data) => {
+    for (const item of data) {
+        {
+            let ticket = await db.Ticket.findOne({
+                where: { name: item.name, calendarId: item.calendarId },
+            });
+            if (ticket) {
+                return item.name;
+            }
         }
     }
     return false;
@@ -16,25 +18,29 @@ const handleCheckExits = async (calendarId, listName) => {
 
 const createTicketService = async (data) => {
     try {
-        let check = await handleCheckExits(
-            data.name,
-            data.firstIndex,
-            data.lastIndex,
-            data.calendarId
-        );
+        let check = await handleCheckExits(data);
         if (check) {
-            return funcReturn(`${check.name} is exits`, 1, []);
+            return funcReturn(`${check} is exits`, 1, []);
         }
 
-        for (let i = data.firstIndex; i <= data.lastIndex; i++) {
-            await db.Ticket.create({
-                name: `${data.name}${i}`,
-                price: data.price,
-                isVip: data.isVip,
-                totalTicket: data.totalTicket,
-                calendarId: data.calendarId,
-            });
+        //check duplicate
+        for (let i = 0; i < data.length - 1; i++) {
+            for (let j = i + 1; j < data.length; j++) {
+                if (data[i].name === data[j].name) {
+                    return funcReturn(`ticket mustn't duplicate `, 1, []);
+                }
+            }
         }
+
+        await data.forEach(async (item) => {
+            await db.Ticket.create({
+                name: item.name,
+                price: item.price,
+                isVip: item.isVip,
+                totalTicket: item.totalTicket,
+                calendarId: item.calendarId,
+            });
+        });
 
         return funcReturn("create tickets successfully", 0, []);
     } catch (err) {
