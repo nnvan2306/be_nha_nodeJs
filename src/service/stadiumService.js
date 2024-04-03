@@ -21,7 +21,8 @@ const handleCheckExits = async (id) => {
 const createStadiumService = async (data) => {
     try {
         let checkExits = await handleCheckStadium(data.name);
-        if (!checkExits) {
+
+        if (checkExits) {
             return funcReturn(`${data.name} is Exits !`, 1, []);
         }
         await db.Stadium.create({
