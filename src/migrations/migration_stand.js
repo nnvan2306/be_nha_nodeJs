@@ -15,6 +15,12 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
             },
+            priceDefault: {
+                type: Sequelize.INTEGER,
+            },
+            totalTicketDefault: {
+                type: Sequelize.INTEGER,
+            },
             stadiumId: {
                 type: Sequelize.INTEGER,
             },

@@ -2,7 +2,7 @@ import returnErrService from "../helps/returnErrService";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
 
-const handleCheckExits = async (name, firstIndex, lastIndex, id) => {
+const handleCheckExits = async (calendarId, listName) => {
     for (let i = firstIndex; i <= lastIndex; i++) {
         let ticket = await db.Ticket.findOne({
             where: { name: `${name}${i}`, calendarId: id },
@@ -159,5 +159,5 @@ module.exports = {
     deleteMultipleTicketService,
     deleteAllTicketService,
     getTicketService,
-    getTicketNoBookingService,
+    // getTicketNoBookingService,
 };

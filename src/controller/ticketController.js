@@ -3,25 +3,23 @@ import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
 import ticketService from "../service/ticketService";
 
-const handleCheckTypeName = (name) => {
-    if (
-        name.charCodeAt(0) < 65 ||
-        name.charCodeAt(0) > 90 ||
-        (name.charCodeAt(1) >= 65 && name.charCodeAt(1) <= 90)
-    ) {
-        return false;
-    }
-    return true;
-};
+// const handleCheckTypeName = (name) => {
+//     if (
+//         name.charCodeAt(0) < 65 ||
+//         name.charCodeAt(0) > 90 ||
+//         (name.charCodeAt(1) >= 65 && name.charCodeAt(1) <= 90)
+//     ) {
+//         return false;
+//     }
+//     return true;
+// };
 
 class TicketController {
     async handleCreateTicket(req, res) {
         try {
             let data = req.body;
             if (
-                !data.name ||
-                !data.firstIndex ||
-                !data.lastIndex ||
+                !data.listName ||
                 !data.price ||
                 !data.totalTicket ||
                 !data.calendarId
@@ -30,18 +28,10 @@ class TicketController {
             }
 
             //check type name
-            let checkName = handleCheckTypeName(data.name);
-            if (!checkName) {
-                return res
-                    .status(404)
-                    .json(funcReturn("Inappropriate name", 1, []));
-            }
 
             let dataBuider = {
                 ...data,
-                name: data.name.toUpperCase(),
-                firstIndex: +data.firstIndex,
-                lastIndex: +data.lastIndex,
+                totalTicket: +data.totalTicket,
                 price: +data.price,
                 calendarId: +data.calendarId,
             };

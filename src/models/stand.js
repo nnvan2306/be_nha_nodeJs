@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Calendar.belongsTo(models.Stadium);
+            Stand.belongsTo(models.Stadium);
         }
     }
 
@@ -17,6 +17,8 @@ module.exports = (sequelize, DataTypes) => {
         {
             isReady: DataTypes.BOOLEAN,
             name: DataTypes.STRING,
+            priceDefault: DataTypes.INTEGER,
+            totalTicketDefault: DataTypes.INTEGER,
             stadiumId: DataTypes.INTEGER,
         },
         {

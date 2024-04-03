@@ -131,6 +131,8 @@ const initApiRoutes = (app) => {
     //stand
     router.post("/create-stand", standController.handleCreateStand);
     router.post("/delete-stand", standController.handleDeleteStand);
+    router.get("/get-stand", standController.handleGetStand);
+    router.put("/update-stand", standController.handleUpdateStand);
 
     //calendar
     router.post("/create-calendar", calendarController.handleCreateCalendar);
@@ -152,10 +154,10 @@ const initApiRoutes = (app) => {
     );
     router.delete("/delete-all-ticket", ticketController.handleDeleteAllTicket);
     router.get("/get-ticket", ticketController.handleGetTicket);
-    router.get(
-        "/get-ticket-not-booking",
-        ticketController.handleGetTicketNotBooking
-    );
+    // router.get(
+    //     "/get-ticket-not-booking",
+    //     ticketController.handleGetTicketNotBooking
+    // );
 
     return app.use("/v1", router);
 };

@@ -24,7 +24,7 @@ const createStandService = async (data) => {
         data.listName.forEach(async (item) => {
             await db.Stand.create({
                 name: item,
-                location: data.location,
+                isReady: item.isReady,
                 stadiumId: data.stadiumId,
             });
         });
@@ -49,4 +49,44 @@ const deleteStandService = async (id) => {
     }
 };
 
-module.exports = { createStandService, deleteStandService };
+const getStandService = async (stadiumId) => {
+    try {
+        let stands = await db.Stand.findAll({
+            where: {
+                stadiumId: stadiumId,
+            },
+        });
+
+        return funcReturn("stands", 0, stands);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const updateStandService = async (data) => {
+    try {
+        await db.Stand.update(
+            {
+                name: data.name,
+                isReady: data.isReady,
+                stadiumId: data.stadiumId,
+            },
+            {
+                where: { id: data.id },
+            }
+        );
+
+        return funcReturn("update stand successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+module.exports = {
+    createStandService,
+    deleteStandService,
+    getStandService,
+    updateStandService,
+};
