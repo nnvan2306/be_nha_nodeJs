@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
 
     Stand.init(
         {
-            isReady: DataTypes.BOOLEAN,
             name: DataTypes.STRING,
+            isReady: DataTypes.BOOLEAN,
             isVipDefault: DataTypes.BOOLEAN,
             priceDefault: DataTypes.INTEGER,
             totalTicketDefault: DataTypes.INTEGER,
