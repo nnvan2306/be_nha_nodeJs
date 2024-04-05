@@ -13,7 +13,8 @@ class standController {
                 if (
                     !item.name ||
                     !item.priceDefault ||
-                    !item.totalTicketDefault
+                    !item.totalTicketDefault ||
+                    !item.stadiumId
                 ) {
                     return res.status(404).json(returnInfoEmpty());
                 }

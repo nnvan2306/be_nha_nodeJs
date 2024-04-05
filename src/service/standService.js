@@ -54,6 +54,7 @@ const createStandService = async (data) => {
 
 const deleteStandService = async (data) => {
     try {
+        // console.log("data>>>>>>", data);
         data.forEach(async (item) => {
             await db.Stand.destroy({
                 where: { id: item.id },
