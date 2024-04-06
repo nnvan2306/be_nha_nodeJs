@@ -1,13 +1,13 @@
 import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
-import {
-    createTeamService,
-    getAllTeamService,
-    getTeamLimitService,
-    deleteTeamService,
-    updateTeamService,
-} from "../service/teamService";
-
+// import {
+//     createTeamService,
+//     getAllTeamService,
+//     getTeamLimitService,
+//     deleteTeamService,
+//     updateTeamService,
+// } from "../service/teamService";
+import teamService from "../service/teamService";
 class teamController {
     async handleCreateTeam(req, res) {
         const team = JSON.parse(JSON.stringify(req.body));
@@ -32,7 +32,7 @@ class teamController {
             };
 
             //create
-            let createTeam = await createTeamService(dataBuider);
+            let createTeam = await teamService.createTeamService(dataBuider);
 
             return res
                 .status(
@@ -61,9 +61,9 @@ class teamController {
                 let page = team.page;
                 let pageSize = team.pageSize;
 
-                fetch = await getTeamLimitService(+page, +pageSize);
+                fetch = await teamService.getTeamLimitService(+page, +pageSize);
             } else {
-                fetch = await getAllTeamService();
+                fetch = await teamService.getAllTeamService();
             }
             return res.status(fetch.errorCode === 0 ? 200 : 400).json({
                 message: fetch.message,
@@ -80,7 +80,7 @@ class teamController {
         try {
             let code = req.query.code;
             if (code) {
-                let fetch = await deleteTeamService(code);
+                let fetch = await teamService.deleteTeamService(code);
                 return res.status(fetch.errorCode === 0 ? 200 : 500).json({
                     message: fetch.message,
                     errorCode: fetch.errorCode,
@@ -117,7 +117,7 @@ class teamController {
             if (team.isChangeFile) {
                 dataBuider.logo = req?.file?.filename;
             }
-            let fetch = await updateTeamService(dataBuider);
+            let fetch = await teamService.updateTeamService(dataBuider);
 
             return res.status(fetch.errorCode === 0 ? 200 : 500).json({
                 message: fetch.message,

@@ -25,10 +25,9 @@ class matchController {
 
             let dataBuider = {
                 ...req.body,
+                match_url: req.file.filename,
             };
-            if (data.isPlayded) {
-                dataBuider.match_url = req.file.filename;
-            }
+
             let fetch = await matchService.createMatchService(dataBuider);
 
             return res

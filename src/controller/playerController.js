@@ -210,4 +210,4 @@ class playerController {
     }
 }
 
-module.exports = playerController();
+module.exports = new playerController();
