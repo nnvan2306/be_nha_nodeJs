@@ -8,114 +8,132 @@ const handleValidateEmail = (email) => {
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     return validate.test(email);
 };
-const handleRegister = async (req, res) => {
-    const user = req.body;
-    try {
-        if (!user.email || !user.name || !user.password || !user.rePassword) {
-            return res.status(400).json(returnInfoEmpty());
+
+class userController {
+    async handleRegister(req, res) {
+        const user = req.body;
+        try {
+            if (
+                !user.email ||
+                !user.name ||
+                !user.password ||
+                !user.rePassword
+            ) {
+                return res.status(400).json(returnInfoEmpty());
+            }
+
+            //validate email
+            const validateEmail = handleValidateEmail(user.email);
+            if (!validateEmail) {
+                return res.status(404).json({
+                    message: "Invalid email",
+                    errorCode: 1,
+                    data: [],
+                });
+            }
+
+            let register = await userService.registerService(user);
+
+            return res
+                .status(
+                    register.errorCode === 0
+                        ? 200
+                        : register.errorCode === 1
+                        ? 400
+                        : 500
+                )
+                .json({
+                    message: register.message,
+                    errorCode: register.errorCode,
+                    data: register.data,
+                });
+        } catch (err) {
+            return res.status(500).json(returnErrService());
         }
-
-        //validate email
-        const validateEmail = handleValidateEmail(user.email);
-        if (!validateEmail) {
-            return res.status(404).json({
-                message: "Invalid email",
-                errorCode: 1,
-                data: [],
-            });
-        }
-
-        let register = await userService.registerService(user);
-
-        return res
-            .status(
-                register.errorCode === 0
-                    ? 200
-                    : register.errorCode === 1
-                    ? 400
-                    : 500
-            )
-            .json({
-                message: register.message,
-                errorCode: register.errorCode,
-                data: register.data,
-            });
-    } catch (err) {
-        return res.status(500).json(returnErrService());
     }
-};
 
-const handleLogin = async (req, res) => {
-    const user = req.body;
-    try {
-        //validate
-        if (!user.email || !user.password) {
-            return res.status(400).json(returnInfoEmpty());
+    async handleLogin(req, res) {
+        const user = req.body;
+        try {
+            //validate
+            if (!user.email || !user.password) {
+                return res.status(400).json(returnInfoEmpty());
+            }
+            //validate email
+            const validateEmail = handleValidateEmail(user.email);
+            if (!validateEmail) {
+                return res.status(404).json({
+                    message: "Invalid email",
+                    errorCode: 1,
+                    data: [],
+                });
+            }
+            let login = await userService.loginService(user);
+            if (login.errorCode === 0) {
+                res.cookie("access_token", login.data.access_token, {
+                    maxAge: 3 * 1000,
+                    httpOnly: true,
+                });
+                res.cookie("refresh_token", login.data.refresh_token, {
+                    maxAge: 365 * 24 * 60 * 60 * 1000,
+                    httpOnly: true,
+                });
+            }
+            return res
+                .status(
+                    login.errorCode === 0
+                        ? 200
+                        : login.errorCode === 1
+                        ? 400
+                        : 500
+                )
+                .json({
+                    message: login.message,
+                    errorCode: login.errorCode,
+                    data: login.data,
+                });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
         }
-        //validate email
-        const validateEmail = handleValidateEmail(user.email);
-        if (!validateEmail) {
-            return res.status(404).json({
-                message: "Invalid email",
-                errorCode: 1,
-                data: [],
-            });
-        }
-        let login = await userService.loginService(user);
-        if (login.errorCode === 0) {
-            res.cookie("access_token", login.data.access_token, {
-                maxAge: 3 * 1000,
-                httpOnly: true,
-            });
-            res.cookie("refresh_token", login.data.refresh_token, {
-                maxAge: 365 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
-            });
-        }
-        return res
-            .status(
-                login.errorCode === 0 ? 200 : login.errorCode === 1 ? 400 : 500
-            )
-            .json({
-                message: login.message,
-                errorCode: login.errorCode,
-                data: login.data,
-            });
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json(returnErrService());
     }
-};
 
-const handleRefreshToken = async (req, res) => {
-    try {
-        let token = req.headers.cookie;
-        if (!token.includes("refresh_token")) {
-            return res.status(404).json(funcReturn("token expired !", 1, []));
+    async handleRefreshToken(req, res) {
+        try {
+            let token = req.headers.cookie;
+            if (!token.includes("refresh_token")) {
+                return res
+                    .status(404)
+                    .json(funcReturn("token expired !", 1, []));
+            }
+
+            let refresh_token = token.split("refresh_token=")[1];
+            let fetch = await userService.refreshTokenService(refresh_token);
+
+            if (fetch.errorCode === 0) {
+                res.cookie("access_token", fetch.data.access_token, {
+                    maxAge: 3 * 1000,
+                    httpOnly: true,
+                });
+                res.cookie("refresh_token", fetch.data.refresh_token, {
+                    maxAge: 365 * 24 * 60 * 60 * 1000,
+                    httpOnly: true,
+                });
+            }
+            return res
+                .status(
+                    fetch.errorCode === 0
+                        ? 200
+                        : fetch.errorCode === 1
+                        ? 404
+                        : 500
+                )
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
         }
-
-        let refresh_token = token.split("refresh_token=")[1];
-        let fetch = await userService.refreshTokenService(refresh_token);
-
-        if (fetch.errorCode === 0) {
-            res.cookie("access_token", fetch.data.access_token, {
-                maxAge: 3 * 1000,
-                httpOnly: true,
-            });
-            res.cookie("refresh_token", fetch.data.refresh_token, {
-                maxAge: 365 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
-            });
-        }
-        return res
-            .status(
-                fetch.errorCode === 0 ? 200 : fetch.errorCode === 1 ? 404 : 500
-            )
-            .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json(returnErrService());
     }
-};
+}
 
-module.exports = { handleRegister, handleLogin, handleRefreshToken };
+module.exports = new userController();

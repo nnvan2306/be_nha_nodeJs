@@ -7,6 +7,7 @@ class TicketController {
     async handleCreateTicket(req, res) {
         try {
             let tickets = req.body;
+            console.log(tickets);
 
             tickets.forEach((item) => {
                 if (
