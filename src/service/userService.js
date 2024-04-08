@@ -60,10 +60,8 @@ const loginService = async (data) => {
         }
 
         //check password
-        let checkPassword = await handleCheckPassword(
-            data.password,
-            user.password
-        );
+        let checkPassword = handleCheckPassword(data.password, user.password);
+
         if (!checkPassword) {
             return funcReturn("wrong password", 1, []);
         }
@@ -81,6 +79,7 @@ const loginService = async (data) => {
             role: user.role,
             expiresIn: process.env.JWT_EXPIRES_REFRESH,
         };
+
         let access_token = await createJwtAccess(payloadAccess);
         let refresh_token = await createJwtRefresh(playloadRefresh);
 

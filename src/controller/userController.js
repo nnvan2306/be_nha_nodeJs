@@ -69,6 +69,7 @@ class userController {
                 });
             }
             let login = await userService.loginService(user);
+
             if (login.errorCode === 0) {
                 res.cookie("access_token", login.data.access_token, {
                     maxAge: 3 * 1000,
@@ -95,6 +96,16 @@ class userController {
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());
+        }
+    }
+
+    async handleLogout(req, res) {
+        try {
+            res.clearCookie("access_token");
+            res.clearCookie("refresh_cookie");
+            return res.status(200).json(funcReturn("logout success", 0, []));
+        } catch (err) {
+            console.log(err);
         }
     }
 
@@ -129,6 +140,15 @@ class userController {
                         : 500
                 )
                 .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
+        }
+    }
+
+    async handleCheckRoleAdmin(req, res) {
+        try {
+            console.log(req.headers);
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());

@@ -29,6 +29,8 @@ const initApiRoutes = (app) => {
     router.get("/refresh-token", userController.handleRefreshToken);
     router.post("/register", userController.handleRegister);
     router.post("/login", userController.handleLogin);
+    router.post("/logout", userController.handleLogout);
+    router.post("/check-role-admin", userController.handleCheckRoleAdmin);
 
     // season
     router.post("/create-season", seasonController.handleCreateSeason);
@@ -92,7 +94,6 @@ const initApiRoutes = (app) => {
     router.put("/update-rating", ratingController.handleUpdateRating);
 
     // match
-    // router.get("/get-match", handleGetMatch);
     router.post(
         "/create-match",
         uploadMatch.single("file"),
