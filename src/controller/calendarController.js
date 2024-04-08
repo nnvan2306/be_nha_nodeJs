@@ -115,5 +115,18 @@ class calendarController {
             return res.status(500).json(returnErrService());
         }
     }
+
+    async handleGetNearestCalendar(req, res) {
+        try {
+            let fetch = await calendarService.getNearestCalendarService();
+
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
+        }
+    }
 }
 module.exports = new calendarController();

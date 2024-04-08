@@ -139,6 +139,10 @@ const initApiRoutes = (app) => {
     router.get("/get-calender", calendarController.handleGetCalendar);
     router.delete("/delete-calendar", calendarController.handleDeleteCalendar);
     router.put("/update-calendar", calendarController.handleUpdateCalendar);
+    router.get(
+        "/get-nearest-calendar",
+        calendarController.handleGetNearestCalendar
+    );
 
     // ticket
     router.post("/create-ticket", ticketController.handleCreateTicket);

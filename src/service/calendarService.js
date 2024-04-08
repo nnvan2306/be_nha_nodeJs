@@ -126,7 +126,17 @@ const getCalendarService = async (data) => {
             }
         }
 
-        return funcReturn("calendars", 0, calendars);
+        let calendarSortTime = calendars.sort((calFirst, calLast) => {
+            let distanceFirst = Math.abs(
+                new Date(calFirst.date).getTime() - new Date().getTime()
+            );
+            let distanceLast = Math.abs(
+                new Date(calLast.date).getTime() - new Date().getTime()
+            );
+            return distanceFirst - distanceLast;
+        });
+
+        return funcReturn("calendars", 0, calendarSortTime);
     } catch (err) {
         console.log(err);
         return returnErrService();
@@ -191,9 +201,42 @@ const updateCalendarService = async (data) => {
     }
 };
 
+const getNearestCalendarService = async () => {
+    try {
+        let calendars = await db.Calendar.findAll({
+            include: [
+                {
+                    model: db.Team,
+                },
+                { model: db.Stadium },
+            ],
+        });
+
+        let listCalendarSort = calendars.sort((calFirst, calLast) => {
+            let distanceFirst = Math.abs(
+                new Date(calFirst.date).getTime() - new Date().getTime()
+            );
+            let distanceLast = Math.abs(
+                new Date(calLast.date).getTime() - new Date().getTime()
+            );
+            return distanceFirst - distanceLast;
+        });
+
+        let listCalendarReturn = listCalendarSort.filter(
+            (item, index) => index < 10
+        );
+
+        return funcReturn("list Calendar", 0, listCalendarReturn);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     crateCalendarService,
     getCalendarService,
     deleteCalendarService,
     updateCalendarService,
+    getNearestCalendarService,
 };
