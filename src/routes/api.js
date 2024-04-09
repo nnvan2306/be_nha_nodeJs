@@ -30,7 +30,7 @@ const initApiRoutes = (app) => {
     router.post("/register", userController.handleRegister);
     router.post("/login", userController.handleLogin);
     router.post("/logout", userController.handleLogout);
-    router.post("/check-role-admin", userController.handleCheckRoleAdmin);
+    router.post("/check-role-admin", jwtAction.handleCheckRoleAdmin);
 
     // season
     router.post("/create-season", seasonController.handleCreateSeason);

@@ -101,8 +101,9 @@ class userController {
 
     async handleLogout(req, res) {
         try {
-            res.clearCookie("access_token");
-            res.clearCookie("refresh_cookie");
+            await res.clearCookie("access_token");
+            await res.clearCookie("refresh_token");
+
             return res.status(200).json(funcReturn("logout success", 0, []));
         } catch (err) {
             console.log(err);
@@ -126,10 +127,6 @@ class userController {
                     maxAge: 3 * 1000,
                     httpOnly: true,
                 });
-                res.cookie("refresh_token", fetch.data.refresh_token, {
-                    maxAge: 365 * 24 * 60 * 60 * 1000,
-                    httpOnly: true,
-                });
             }
             return res
                 .status(
@@ -140,15 +137,6 @@ class userController {
                         : 500
                 )
                 .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
-        } catch (err) {
-            console.log(err);
-            return res.status(500).json(returnErrService());
-        }
-    }
-
-    async handleCheckRoleAdmin(req, res) {
-        try {
-            console.log(req.headers);
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());

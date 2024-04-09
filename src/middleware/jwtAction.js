@@ -46,21 +46,51 @@ const handleCheckToken = (req, res, next) => {
         console.log("jwt ---------------------", req.headers);
         if (!token.includes("access_token")) {
             return res.status(401).json(funcReturn("token expired !", 1, []));
-        } else {
-            let access_token = token.split("access_token=")[1].split(";")[0];
-            let info = verifyToken(access_token);
-
-            if (info.role === "admin") {
-                next();
-            } else {
-                return res
-                    .status(404)
-                    .json(funcReturn("account is not admin !", 1, []));
-            }
         }
+
+        let access_token = token.split("access_token=")[1].split(";")[0];
+        let info = verifyToken(access_token);
+
+        if (info.role !== "admin") {
+            return res
+                .status(404)
+                .json(funcReturn("account is not admin !", 1, []));
+        }
+
+        next();
     } catch (err) {
         console.log(err);
         return res.status(500).json(returnErrService);
+    }
+};
+
+const handleCheckRoleAdmin = (req, res) => {
+    try {
+        const path = req.headers.cookie;
+        if (!path) {
+            return res.status(400).json(funcReturn("token empty ", 1, []));
+        }
+        if (!path.includes("access_token")) {
+            return res
+                .status(401)
+                .json(funcReturn("access_token is expired !", 1, []));
+        }
+
+        const access_token = path.split("access_token=")[1].split(";")[0];
+
+        let info = verifyToken(access_token);
+
+        return res
+            .status(info.role === "admin" ? 200 : 404)
+            .json(
+                funcReturn(
+                    info.role === "admin" ? "admin" : "account isn't admin",
+                    0,
+                    []
+                )
+            );
+    } catch (err) {
+        console.log(err);
     }
 };
 
@@ -70,5 +100,5 @@ module.exports = {
     verifyToken,
     verifyRefreshToken,
     handleCheckToken,
-    // checkRole,
+    handleCheckRoleAdmin,
 };

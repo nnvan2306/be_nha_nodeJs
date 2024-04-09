@@ -69,14 +69,14 @@ const loginService = async (data) => {
         let payloadAccess = {
             email: user.email,
             name: user.name,
-            role: user.role,
+            role: user.isAdmin ? "admin" : "user",
             expiresIn: process.env.JWT_EXPIRES_ACCESS,
         };
 
         let playloadRefresh = {
             email: user.email,
             name: user.name,
-            role: user.role,
+            role: user.isAdmin ? "admin" : "user",
             expiresIn: process.env.JWT_EXPIRES_REFRESH,
         };
 
@@ -101,29 +101,20 @@ const refreshTokenService = async (token) => {
         }
         let user = await checkEmailIsExits(decode.email);
         if (!user) {
-            return funcReturn("acount not exits !", 1, []);
+            return funcReturn("account not exits !", 1, []);
         }
 
         let payloadAccess = {
             email: user.email,
             name: user.name,
-            role: user.role,
+            role: user.isAdmin ? "admin" : "user",
             expiresIn: process.env.JWT_EXPIRES_ACCESS,
         };
 
-        let playloadRefresh = {
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            expiresIn: process.env.JWT_EXPIRES_REFRESH,
-        };
-
         let access_token = await createJwtAccess(payloadAccess);
-        let refresh_token = await createJwtRefresh(playloadRefresh);
 
         return funcReturn("token", 0, {
             access_token: access_token,
-            refresh_token: refresh_token,
         });
     } catch (err) {
         console.log(err);
