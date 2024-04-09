@@ -1,15 +1,11 @@
 import returnErrService from "../helps/returnErrService";
 import returnInfoEmpty from "../helps/returnInfoEmpty";
-// import {
-//     createTeamService,
-//     getAllTeamService,
-//     getTeamLimitService,
-//     deleteTeamService,
-//     updateTeamService,
-// } from "../service/teamService";
 import teamService from "../service/teamService";
+
 class teamController {
     async handleCreateTeam(req, res) {
+        console.log(req.body);
+        console.log(req.file);
         const team = JSON.parse(JSON.stringify(req.body));
         try {
             //validate

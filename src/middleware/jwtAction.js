@@ -68,6 +68,8 @@ const handleCheckToken = (req, res, next) => {
         console.log(err);
         return res.status(500).json(returnErrService);
     }
+    // console.log(req.headers);
+    // next();
 };
 
 const handleCheckRoleAdmin = (req, res) => {
