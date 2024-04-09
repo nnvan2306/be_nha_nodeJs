@@ -5,6 +5,7 @@ import seasonService from "../service/seasonService";
 
 class seasonController {
     async handleCreateSeason(req, res) {
+        console.log("season");
         const season = req.body;
         // console.log(req.headers);
         // console.log(JSON.stringify(req));

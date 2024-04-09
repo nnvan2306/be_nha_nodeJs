@@ -43,9 +43,15 @@ const handleCheckToken = (req, res, next) => {
 
     try {
         let token = req.headers.cookie;
-        console.log("jwt ---------------------", req.headers);
+
+        if (!token) {
+            return res.status(404).json(funcReturn("token is empty !", 1, []));
+        }
+
         if (!token.includes("access_token")) {
-            return res.status(401).json(funcReturn("token expired !", 1, []));
+            return res
+                .status(401)
+                .json(funcReturn("access token expired !", 1, []));
         }
 
         let access_token = token.split("access_token=")[1].split(";")[0];

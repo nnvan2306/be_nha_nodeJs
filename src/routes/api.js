@@ -24,7 +24,7 @@ import scored from "../models/scored";
 const router = express.Router();
 
 const initApiRoutes = (app) => {
-    // router.all("*", jwtAction.handleCheckToken);
+    router.all("*", jwtAction.handleCheckToken);
 
     router.get("/refresh-token", userController.handleRefreshToken);
     router.post("/register", userController.handleRegister);

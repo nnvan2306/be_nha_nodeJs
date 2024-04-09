@@ -12,6 +12,7 @@ export default function configCors(app) {
             "X-Requested-With,Content-Type"
         );
         res.header("Access-Control-Allow-Credentials", true);
+
         next();
     });
 }
