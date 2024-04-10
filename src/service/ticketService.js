@@ -1,6 +1,7 @@
 import returnErrService from "../helps/returnErrService";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
+import { where } from "sequelize";
 
 const handleCheckExits = async (data) => {
     for (const item of data) {
@@ -153,6 +154,33 @@ const getTicketService = async (calendarId) => {
     }
 };
 
+const getOneTicketService = async (id) => {
+    try {
+        let ticket = await db.Ticket.findOne({
+            where: { id: id },
+            include: {
+                model: db.Calendar,
+                include: [
+                    {
+                        model: db.Stadium,
+                        include: {
+                            model: db.Stand,
+                        },
+                    },
+                    {
+                        model: db.Team,
+                    },
+                ],
+            },
+        });
+
+        return funcReturn("ticket", 0, ticket);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     createTicketService,
     updateBookingTicketService,
@@ -160,4 +188,5 @@ module.exports = {
     deleteAllTicketService,
     getTicketService,
     updateTicketService,
+    getOneTicketService,
 };

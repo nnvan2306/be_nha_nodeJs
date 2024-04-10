@@ -144,6 +144,25 @@ class TicketController {
             return res.status(500).json(returnErrService());
         }
     }
+
+    async handleGetOneTicket(req, res) {
+        try {
+            let fetch = await ticketService.getOneTicketService(+req.query.id);
+
+            return res
+                .status(
+                    fetch.errorCode === 0
+                        ? 200
+                        : fetch.errorCode === 1
+                        ? 400
+                        : 500
+                )
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
+        }
+    }
 }
 
 module.exports = new TicketController();

@@ -272,6 +272,8 @@ const initApiRoutes = (app) => {
     );
     router.get("/get-ticket", ticketController.handleGetTicket);
 
+    router.get("/get-one-ticket", ticketController.handleGetOneTicket);
+
     return app.use("/v1", router);
 };
 
