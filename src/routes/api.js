@@ -11,6 +11,7 @@ import calendarController from "../controller/calendarController";
 import ticketController from "../controller/ticketController";
 import stadiumController from "../controller/stadiumController";
 import standController from "../controller/standController";
+import billController from "../controller/billController";
 import {
     upload,
     uploadAvatar,
@@ -32,6 +33,8 @@ const initApiRoutes = (app) => {
     router.post("/logout", userController.handleLogout);
     router.post("/check-role-admin", jwtAction.handleCheckRoleAdmin);
 
+    //
+    //
     // season
     router.post(
         "/create-season",
@@ -50,6 +53,8 @@ const initApiRoutes = (app) => {
         seasonController.handleUpdateSeason
     );
 
+    //
+    //
     //team
     router.post(
         "/create-team",
@@ -75,6 +80,8 @@ const initApiRoutes = (app) => {
         teamController.handleSearchTeam
     );
 
+    //
+    //
     // player
     router.post(
         "/create-player",
@@ -102,6 +109,8 @@ const initApiRoutes = (app) => {
         playerController.handleGetPlayerDetailSeason
     );
 
+    //
+    //
     //Statistic
     router.post(
         "/create-statistic",
@@ -127,6 +136,8 @@ const initApiRoutes = (app) => {
         statisticController.handleGetStatisticSeason
     );
 
+    //
+    //
     // rating
     router.post(
         "/create-rating",
@@ -145,6 +156,8 @@ const initApiRoutes = (app) => {
         ratingController.handleUpdateRating
     );
 
+    //
+    //
     // match
     router.post(
         "/create-match",
@@ -167,6 +180,8 @@ const initApiRoutes = (app) => {
     router.get("/search-match", matchController.handleSearchMatch);
     router.get("/get-match-by-id", matchController.handleGetMAtchById);
 
+    //
+    //
     //scored
     router.get("/get-scored", scoredController.handleGetScored);
     router.delete(
@@ -185,6 +200,8 @@ const initApiRoutes = (app) => {
         scoredController.handleUpdateScored
     );
 
+    //
+    //
     //stadium
     router.post(
         "/create-stadium",
@@ -205,6 +222,8 @@ const initApiRoutes = (app) => {
         stadiumController.handleUpdateStadium
     );
 
+    //
+    //
     //stand
     router.post(
         "/create-stand",
@@ -223,6 +242,8 @@ const initApiRoutes = (app) => {
         standController.handleUpdateStand
     );
 
+    //
+    //
     //calendar
     router.post(
         "/create-calendar",
@@ -245,6 +266,8 @@ const initApiRoutes = (app) => {
         calendarController.handleGetNearestCalendar
     );
 
+    //
+    //
     // ticket
     router.post(
         "/create-ticket",
@@ -271,8 +294,14 @@ const initApiRoutes = (app) => {
         ticketController.handleDeleteAllTicket
     );
     router.get("/get-ticket", ticketController.handleGetTicket);
-
     router.get("/get-one-ticket", ticketController.handleGetOneTicket);
+
+    //
+    //
+    // bill
+    router.post("/create-bill", billController.handleCreateBill);
+    router.delete("/delete-bill", billController.handleDeleteBill);
+    router.get("/get-bill", billController.handleGetBill);
 
     return app.use("/v1", router);
 };
