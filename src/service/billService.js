@@ -51,4 +51,42 @@ const deleteBillService = async (id) => {
     }
 };
 
-module.exports = { createBillService, deleteBillService };
+const getAllBillService = async () => {
+    try {
+        let bills = await db.Bill.findAll();
+        return funcReturn("all bill", 0, bills);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const getLimitBillService = async (page, pageSize) => {
+    try {
+        let offset = (page - 1) * pageSize;
+        let { count, rows } = await db.Bill.findAndCountAll({
+            offset: offset,
+            limit: pageSize,
+        });
+        let data = {
+            items: rows,
+            meta: {
+                currentPage: page,
+                totalIteams: count,
+                totalPages: Math.ceil(count / pageSize),
+            },
+        };
+
+        return funcReturn("bills", 0, data);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+module.exports = {
+    createBillService,
+    deleteBillService,
+    getAllBillService,
+    getLimitBillService,
+};
