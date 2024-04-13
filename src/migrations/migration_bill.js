@@ -12,7 +12,7 @@ module.exports = {
             price: {
                 type: Sequelize.INTEGER,
             },
-            content: {
+            uuid: {
                 type: Sequelize.STRING,
             },
             createdAt: {

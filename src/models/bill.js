@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     Bill.init(
         {
             price: DataTypes.INTEGER,
-            content: DataTypes.STRING,
+            uuid: DataTypes.STRING,
         },
         {
             sequelize,

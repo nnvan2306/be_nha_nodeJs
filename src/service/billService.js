@@ -1,38 +1,26 @@
 import returnErrService from "../helps/returnErrService";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
-import { where } from "sequelize";
 
 const createBillService = async (data) => {
     try {
         await db.Bill.create({
             price: data.price,
-            content: data.content,
+            uuid: data.uuid,
         });
 
-        let bill = await db.Bill.findOne({
-            where: {
-                price: data.price,
-                content: data.content,
-            },
-        });
-
-        if (!bill) {
-            return funcReturn("bill is not exits !", 1, []);
-        }
-
-        return funcReturn("bill", 0, bill);
+        return funcReturn("create bill success", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();
     }
 };
 
-const deleteBillService = async (id) => {
+const deleteBillService = async (uuid) => {
     try {
         let bill = await db.Bill.findOne({
             where: {
-                id: id,
+                uuid: uuid,
             },
         });
 
@@ -41,7 +29,7 @@ const deleteBillService = async (id) => {
         }
 
         await db.Bill.destroy({
-            where: { id: id },
+            where: { uuid: uuid },
         });
 
         return funcReturn("delete Bill successfully", 0, []);
