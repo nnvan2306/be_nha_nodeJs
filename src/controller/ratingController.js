@@ -32,7 +32,7 @@ class ratingController {
             let rating;
             if (req.query.seasonId) {
                 rating = await ratingService.handleGetRatingSeasonService(
-                    req.query.seasonId
+                    +req.query.seasonId
                 );
             } else {
                 rating = await ratingService.handleGetAllRatingService();

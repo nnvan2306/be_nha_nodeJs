@@ -15,7 +15,15 @@ module.exports = (sequelize, DataTypes) => {
     Bill.init(
         {
             price: DataTypes.INTEGER,
+            totalTicket: DataTypes.INTEGER,
             uuid: DataTypes.STRING,
+            email: DataTypes.STRING,
+            phoneNumber: DataTypes.INTEGER,
+            firstName: DataTypes.STRING,
+            lastName: DataTypes.STRING,
+            address: DataTypes.STRING,
+            city: DataTypes.STRING,
+            country: DataTypes.STRING,
         },
         {
             sequelize,

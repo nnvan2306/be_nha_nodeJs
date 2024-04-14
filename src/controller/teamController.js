@@ -4,8 +4,6 @@ import teamService from "../service/teamService";
 
 class teamController {
     async handleCreateTeam(req, res) {
-        console.log(req.body);
-        console.log(req.file);
         const team = JSON.parse(JSON.stringify(req.body));
         try {
             //validate

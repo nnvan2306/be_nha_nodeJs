@@ -6,10 +6,26 @@ import billService from "../service/billService";
 class billController {
     async handleCreateBill(req, res) {
         try {
-            if (!req.body.price || !req.body.uuid) {
+            if (
+                !req.body.ticketId ||
+                !req.body.totalTicket ||
+                !req.body.uuid ||
+                !req.body.email ||
+                !req.body.phoneNumber ||
+                !req.body.firstName ||
+                !req.body.lastName ||
+                !req.body.address ||
+                !req.body.city ||
+                !req.body.country
+            ) {
                 return res.status(404).json(returnInfoEmpty());
             }
-            let dataBuider = { ...req.body, price: +req.body.price };
+            let dataBuider = {
+                ...req.body,
+                ticketId: +req.body.ticketId,
+                totalTicket: +req.body.totalTicket,
+                phoneNumber: +req.body.phoneNumber,
+            };
             let fetch = await billService.createBillService(dataBuider);
             return res
                 .status(
@@ -31,7 +47,7 @@ class billController {
             if (!req.query.uuid) {
                 return res.status(404).json(returnInfoEmpty());
             }
-            let fetch = await billService.deleteBillService(+req.query.uuid);
+            let fetch = await billService.deleteBillService(req.query.uuid);
             return res
                 .status(
                     fetch.errorCode === 0

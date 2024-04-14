@@ -1,12 +1,23 @@
 import returnErrService from "../helps/returnErrService";
 import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
+import ticketService from "./ticketService";
 
 const createBillService = async (data) => {
     try {
+        let ticket = await ticketService.getOneTicketService(data.ticketId);
+
         await db.Bill.create({
-            price: data.price,
+            price: ticket.data.dataValues.price * data.totalTicket,
+            totalTicket: data.totalTicket,
             uuid: data.uuid,
+            email: data.email,
+            phoneNumber: data.phoneNumber,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            address: data.address,
+            city: data.city,
+            country: data.country,
         });
 
         return funcReturn("create bill success", 0, []);

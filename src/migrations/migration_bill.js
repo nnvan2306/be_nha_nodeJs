@@ -12,7 +12,32 @@ module.exports = {
             price: {
                 type: Sequelize.INTEGER,
             },
+            totalTicket: {
+                type: Sequelize.INTEGER,
+            },
+
             uuid: {
+                type: Sequelize.STRING,
+            },
+            email: {
+                type: Sequelize.STRING,
+            },
+            phoneNumber: {
+                type: Sequelize.INTEGER,
+            },
+            firstName: {
+                type: Sequelize.STRING,
+            },
+            lastName: {
+                type: Sequelize.STRING,
+            },
+            address: {
+                type: Sequelize.STRING,
+            },
+            city: {
+                type: Sequelize.STRING,
+            },
+            country: {
                 type: Sequelize.STRING,
             },
             createdAt: {
