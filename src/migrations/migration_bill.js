@@ -23,7 +23,7 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             phoneNumber: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING,
             },
             firstName: {
                 type: Sequelize.STRING,
@@ -40,6 +40,10 @@ module.exports = {
             country: {
                 type: Sequelize.STRING,
             },
+            isDelivered: {
+                type: Sequelize.BOOLEAN,
+            },
+
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

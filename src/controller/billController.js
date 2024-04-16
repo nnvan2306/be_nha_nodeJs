@@ -24,7 +24,6 @@ class billController {
                 ...req.body,
                 ticketId: +req.body.ticketId,
                 totalTicket: +req.body.totalTicket,
-                phoneNumber: +req.body.phoneNumber,
             };
             let fetch = await billService.createBillService(dataBuider);
             return res
@@ -63,33 +62,59 @@ class billController {
         }
     }
 
-    // async handleGetBill(req, res) {
-    //     try {
-    //         let bills;
+    async handleGetBill(req, res) {
+        try {
+            let fetch;
 
-    //         if (!req.body.page || !req.body.pageSize) {
-    //             bills = await billService.getAllBillService();
-    //         } else {
-    //             bills = await billService.getLimitBillService(
-    //                 +req.body.page,
-    //                 +req.body.pageSize
-    //             );
-    //         }
+            if (!req.query.page || !req.query.pageSize) {
+                fetch = await billService.getAllBillService();
+            } else {
+                fetch = await billService.getLimitBillService(
+                    +req.query.page,
+                    +req.query.pageSize
+                );
+            }
 
-    //         return res
-    //             .status(
-    //                 fetch.errorCode === 0
-    //                     ? 200
-    //                     : fetch.errorCode === 1
-    //                     ? 400
-    //                     : 500
-    //             )
-    //             .json(funcReturn(bills.message, bills.errorCode, bills.data));
-    //     } catch (err) {
-    //         console.log(err);
-    //         return res.status(500).json(returnErrService());
-    //     }
-    // }
+            return res
+                .status(
+                    fetch.errorCode === 0
+                        ? 200
+                        : fetch.errorCode === 1
+                        ? 400
+                        : 500
+                )
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
+        }
+    }
+
+    async handleUpdateActiveBill(req, res) {
+        try {
+            if (!req.query.uuid) {
+                return res.status(404).json(returnInfoEmpty());
+            }
+
+            let fetch = await billService.updateIsDeliveredService(
+                +req.query.uuid
+            );
+
+            return res
+                .status(
+                    fetch.errorCode === 0
+                        ? 200
+                        : fetch.errorCode === 1
+                        ? 400
+                        : 500
+                )
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+            s;
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
+        }
+    }
 }
 
 module.exports = new billController();

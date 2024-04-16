@@ -301,7 +301,8 @@ const initApiRoutes = (app) => {
     // bill
     router.post("/create-bill", billController.handleCreateBill);
     router.delete("/delete-bill", billController.handleDeleteBill);
-    // router.get("/get-bill", billController.handleGetBill);
+    router.get("/get-bill", billController.handleGetBill);
+    router.patch("/update-active-bill", billController.handleUpdateActiveBill);
 
     return app.use("/v1", router);
 };

@@ -3,6 +3,16 @@ import db from "../models/index";
 import funcReturn from "../helps/funcReturn";
 import ticketService from "./ticketService";
 
+const handleCheckBillExits = async (uuid) => {
+    let bill = await db.Bill.findOne({
+        where: {
+            uuid: uuid,
+        },
+    });
+
+    return bill;
+};
+
 const createBillService = async (data) => {
     try {
         let ticket = await ticketService.getOneTicketService(data.ticketId);
@@ -18,6 +28,7 @@ const createBillService = async (data) => {
             address: data.address,
             city: data.city,
             country: data.country,
+            IsDelivered: false,
         });
 
         return funcReturn("create bill success", 0, []);
@@ -29,13 +40,7 @@ const createBillService = async (data) => {
 
 const deleteBillService = async (uuid) => {
     try {
-        let bill = await db.Bill.findOne({
-            where: {
-                uuid: uuid,
-            },
-        });
-
-        if (!bill) {
+        if (!handleCheckBillExits(uuid)) {
             return funcReturn("bill is not exits !", 1, []);
         }
 
@@ -83,9 +88,30 @@ const getLimitBillService = async (page, pageSize) => {
     }
 };
 
+const updateIsDeliveredService = async (uuid) => {
+    try {
+        let bill = handleCheckBillExits(uuid);
+        if (!bill) {
+            return funcReturn("bill is not exits !", 1, []);
+        }
+
+        await db.Bill.update(
+            {
+                // isDelivered: ! bill.isDelivered,
+                isDelivered: bill.isDelivered ? false : true,
+            },
+            { where: { uuid: uuid } }
+        );
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     createBillService,
     deleteBillService,
     getAllBillService,
     getLimitBillService,
+    updateIsDeliveredService,
 };
