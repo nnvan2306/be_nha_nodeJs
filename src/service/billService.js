@@ -28,7 +28,7 @@ const createBillService = async (data) => {
             address: data.address,
             city: data.city,
             country: data.country,
-            IsDelivered: false,
+            isDelivered: false,
         });
 
         return funcReturn("create bill success", 0, []);
