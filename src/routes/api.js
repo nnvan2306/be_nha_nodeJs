@@ -12,6 +12,7 @@ import ticketController from "../controller/ticketController";
 import stadiumController from "../controller/stadiumController";
 import standController from "../controller/standController";
 import billController from "../controller/billController";
+import emailController from "../controller/emailController";
 import {
     upload,
     uploadAvatar,
@@ -307,6 +308,11 @@ const initApiRoutes = (app) => {
         jwtAction.handleCheckToken,
         billController.handleUpdateActiveBill
     );
+
+    //
+    //
+    //send email
+    router.post("/send-email", emailController.handleSendEmail);
 
     return app.use("/v1", router);
 };
