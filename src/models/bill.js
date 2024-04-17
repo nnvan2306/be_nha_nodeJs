@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            Bill.belongsTo(models.Ticket);
         }
     }
 
@@ -25,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
             city: DataTypes.STRING,
             country: DataTypes.STRING,
             isDelivered: DataTypes.BOOLEAN,
+            ticketId: DataTypes.INTEGER,
         },
         {
             sequelize,

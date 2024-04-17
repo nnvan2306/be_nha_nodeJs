@@ -43,6 +43,9 @@ module.exports = {
             isDelivered: {
                 type: Sequelize.BOOLEAN,
             },
+            ticketId: {
+                type: Sequelize.INTEGER,
+            },
 
             createdAt: {
                 allowNull: false,

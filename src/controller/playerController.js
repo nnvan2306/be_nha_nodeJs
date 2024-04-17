@@ -5,7 +5,7 @@ import playerService from "../service/playerService";
 
 class playerController {
     async handleCreatePlayer(req, res) {
-        const player = JSON.parse(JSON.stringify(req.body));
+        let player = JSON.parse(JSON.stringify(req.body));
         try {
             //validate
             if (
@@ -25,17 +25,12 @@ class playerController {
             }
 
             let dataBuider = {
-                code: player?.code,
-                name: player?.name,
-                nationality: player?.nationality,
-                height: player?.height,
-                weight: player?.weight,
-                location: player?.location,
-                birthday: player?.birthday,
-                teamId: player?.teamId,
-                isActive: player?.isActive,
-                description: player?.description,
-                des_text: player?.des_text,
+                ...player,
+                code: +player?.code,
+                height: +player?.height,
+                weight: +player?.weight,
+                location: +player?.location,
+                teamId: +player?.teamId,
                 avatar_url: req.file.filename,
             };
 
@@ -126,6 +121,12 @@ class playerController {
 
             let dataBuider = {
                 ...player,
+                player: +player.id,
+                code: +player?.code,
+                height: +player?.height,
+                weight: +player?.weight,
+                location: +player?.location,
+                teamId: +player?.teamId,
                 isChangeFile: JSON.parse(player.isChangeFile),
             };
             if (player.isChangeFile) {

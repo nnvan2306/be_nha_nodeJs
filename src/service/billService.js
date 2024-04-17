@@ -29,6 +29,7 @@ const createBillService = async (data) => {
             city: data.city,
             country: data.country,
             isDelivered: false,
+            ticketId: data.ticketId,
         });
 
         return funcReturn("create bill success", 0, []);
@@ -71,6 +72,21 @@ const getLimitBillService = async (page, pageSize) => {
         let { count, rows } = await db.Bill.findAndCountAll({
             offset: offset,
             limit: pageSize,
+            include: [
+                {
+                    model: db.Ticket,
+                    include: [
+                        {
+                            model: db.Calendar,
+                            // include: [
+                            //     {
+                            //         model: db.Team,
+                            //     },
+                            // ],
+                        },
+                    ],
+                },
+            ],
         });
         let data = {
             items: rows,
@@ -90,7 +106,7 @@ const getLimitBillService = async (page, pageSize) => {
 
 const updateIsDeliveredService = async (uuid) => {
     try {
-        let bill = handleCheckBillExits(uuid);
+        let bill = await handleCheckBillExits(uuid);
         if (!bill) {
             return funcReturn("bill is not exits !", 1, []);
         }
@@ -102,6 +118,7 @@ const updateIsDeliveredService = async (uuid) => {
             },
             { where: { uuid: uuid } }
         );
+        return funcReturn("update bill ", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();

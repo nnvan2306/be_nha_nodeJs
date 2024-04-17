@@ -92,12 +92,12 @@ class billController {
 
     async handleUpdateActiveBill(req, res) {
         try {
-            if (!req.query.uuid) {
+            if (!req.body.uuid) {
                 return res.status(404).json(returnInfoEmpty());
             }
 
             let fetch = await billService.updateIsDeliveredService(
-                +req.query.uuid
+                req.body.uuid
             );
 
             return res
@@ -109,7 +109,6 @@ class billController {
                         : 500
                 )
                 .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
-            s;
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());
