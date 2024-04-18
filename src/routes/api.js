@@ -13,6 +13,8 @@ import stadiumController from "../controller/stadiumController";
 import standController from "../controller/standController";
 import billController from "../controller/billController";
 import emailController from "../controller/emailController";
+import commentController from "../controller/commentController";
+import feedbackController from "../controller/feedbackController";
 import {
     upload,
     uploadAvatar,
@@ -313,6 +315,24 @@ const initApiRoutes = (app) => {
     //
     //send email
     router.post("/send-email", emailController.handleSendEmail);
+
+    //
+    //
+    //comment
+    router.post("/create-comment", commentController.handleCreateComment);
+    router.get("/get-comment", commentController.handleGetComment);
+    router.delete("/delete-comment", commentController.handleDeleteComment);
+    router.patch("/like-comment", commentController.handleLikeComment);
+    router.patch("dislike-comment", commentController.handleDislikeComment);
+
+    //
+    //
+    //feedback
+    router.post("/create-feedback", feedbackController.handleCreateFeedback);
+    router.get("/get-feedback", feedbackController.handleGetFeedback);
+    router.delete("/delete-feedback", feedbackController.handleDeleteFeedback);
+    router.patch("/like-feedback", feedbackController.handleLikeFeedback);
+    router.patch("dislike-feedback", feedbackController.handleDislikeFeedback);
 
     return app.use("/v1", router);
 };

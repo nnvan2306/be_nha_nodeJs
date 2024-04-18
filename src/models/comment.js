@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             // Comment.hasMany(models.Ticket);
-            // Comment.belongsTo(models.Stadium);
+            Comment.belongsTo(models.Match);
+            Comment.belongsTo(models.User);
+            Comment.hasMany(models.Feedback);
             // Comment.belongsToMany(models.Team, {
             //     through: "Comment_Team",
             //     foreignKey: "CommentId",

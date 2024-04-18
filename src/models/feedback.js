@@ -9,12 +9,8 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            // Feedback.hasMany(models.Ticket);
-            // Feedback.belongsTo(models.Stadium);
-            // Feedback.belongsToMany(models.Team, {
-            //     through: "Feedback_Team",
-            //     foreignKey: "FeedbackId",
-            // });
+            Feedback.belongsTo(models.User);
+            Feedback.belongsTo(models.Comment);
         }
     }
 

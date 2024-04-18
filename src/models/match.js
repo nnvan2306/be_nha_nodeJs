@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             });
             Match.hasMany(models.Scored);
             Match.belongsTo(models.Season);
+            Match.hasMany(models.Comment);
         }
     }
 
