@@ -32,12 +32,13 @@ class commentController {
     async handleGetComment(req, res) {
         try {
             let comments;
-            if (!req.query.page || !req.query.pageSize) {
+            if (!req.query.page || !req.query.pageSize || !req.query.matchId) {
                 comments = await commentService.getAllCommentService();
             } else {
                 comments = await commentService.getLimitCommentService(
                     +req.query.page,
-                    req.query.pageSize
+                    +req.query.pageSize,
+                    +req.query.matchId
                 );
             }
 
@@ -66,6 +67,18 @@ class commentController {
 
     async handleLikeComment(req, res) {
         try {
+            if (!req.body.commentId) {
+                return res.status(404).json(returnInfoEmpty());
+            }
+
+            let fetch = await commentService.updateLikeCommentService(
+                +req.body.commentId,
+                +req.body.isIncrease
+            );
+
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());
@@ -74,6 +87,18 @@ class commentController {
 
     async handleDislikeComment(req, res) {
         try {
+            if (!req.body.commentId) {
+                return res.status(404).json(returnInfoEmpty());
+            }
+
+            let fetch = await commentService.updateDisLikeCommentService(
+                +req.body.commentId,
+                +req.body.isIncrease
+            );
+
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());

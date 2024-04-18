@@ -323,7 +323,7 @@ const initApiRoutes = (app) => {
     router.get("/get-comment", commentController.handleGetComment);
     router.delete("/delete-comment", commentController.handleDeleteComment);
     router.patch("/like-comment", commentController.handleLikeComment);
-    router.patch("dislike-comment", commentController.handleDislikeComment);
+    router.patch("/dislike-comment", commentController.handleDislikeComment);
 
     //
     //

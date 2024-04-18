@@ -1,7 +1,15 @@
 import db from "../models/index";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
+
+const handleGetOneComment = async (id) => {
+    let comment = await db.Comment.findOne({
+        where: { id: id },
+    });
+
+    return comment;
+};
 
 const createCommentService = async (data) => {
     try {
@@ -33,24 +41,51 @@ const getAllCommentService = async () => {
     }
 };
 
-const getLimitCommentService = async (page, pageSize) => {
+const getLimitCommentService = async (page, pageSize, matchId) => {
     try {
         let offset = (page - 1) * pageSize;
-        let { count, rows } = await db.Comment.findAndCountAll({
-            offset: offset,
-            limit: pageSize,
+
+        // let { count, rows } = await db.Comment.findAndCountAll({
+        //     offset: offset,
+        //     limit: pageSize,
+        //     include: [{ model: db.User }, { model: db.Feedback }],
+        // });
+
+        // let data = {
+        //     items: rows,
+        //     meta: {
+        //         currentPage: page,
+        //         totalIteams: count,
+        //         totalPages: Math.ceil(count / pageSize),
+        //     },
+        // };
+
+        let start = (page - 1) * 10;
+
+        let comments = await db.Comment.findAll({
+            where: {
+                [Op.and]: [
+                    { matchId: matchId },
+                    {
+                        [Op.or]: [
+                            { id: start + 1 },
+                            { id: start + 2 },
+                            { id: start + 3 },
+                            { id: start + 4 },
+                            { id: start + 5 },
+                            { id: start + 6 },
+                            { id: start + 7 },
+                            { id: start + 8 },
+                            { id: start + 9 },
+                            { id: start + 10 },
+                        ],
+                    },
+                ],
+            },
             include: [{ model: db.User }, { model: db.Feedback }],
         });
 
-        let data = {
-            items: rows,
-            meta: {
-                currentPage: page,
-                totalIteams: count,
-                totalPages: Math.ceil(count / pageSize),
-            },
-        };
-        return funcReturn("comments", 0, data);
+        return funcReturn("comments", 0, comments);
     } catch (err) {
         console.log(err);
         return returnErrService();
@@ -65,16 +100,64 @@ const deleteCommentService = async (id) => {
     }
 };
 
-const updateLikeCommentService = async (id) => {
+const updateLikeCommentService = async (commentId, isIncrease) => {
     try {
+        let comment = await handleGetOneComment(commentId);
+
+        if (!comment) {
+            return funcReturn("comment is not exits ", 1, []);
+        }
+
+        let countLikeNew = comment.like;
+        if (isIncrease) {
+            countLikeNew = comment.like + 1;
+        } else {
+            if (comment.like === 0) {
+                countLikeNew = 0;
+            } else {
+                countLikeNew = comment.like - 1;
+            }
+        }
+        await db.Comment.update(
+            {
+                like: countLikeNew,
+            },
+            { where: { id: commentId } }
+        );
+
+        return funcReturn("update success", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();
     }
 };
 
-const updateDisLikeCommentService = async (id) => {
+const updateDisLikeCommentService = async (commentId, isIncrease) => {
     try {
+        let comment = await handleGetOneComment(commentId);
+
+        if (!comment) {
+            return funcReturn("comment is not exits ", 1, []);
+        }
+
+        let countDislikeNew = comment.disLike;
+        if (isIncrease) {
+            countDislikeNew = comment.disLike + 1;
+        } else {
+            if (comment.disLike === 0) {
+                countDislikeNew = 0;
+            } else {
+                countDislikeNew = comment.disLike - 1;
+            }
+        }
+        await db.Comment.update(
+            {
+                disLike: countDislikeNew,
+            },
+            { where: { id: commentId } }
+        );
+
+        return funcReturn("update success", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();
