@@ -86,6 +86,7 @@ const loginService = async (data) => {
         return funcReturn("login successfully", 0, {
             access_token: access_token,
             refresh_token: refresh_token,
+            name: user.name,
         });
     } catch (err) {
         console.log(err);
