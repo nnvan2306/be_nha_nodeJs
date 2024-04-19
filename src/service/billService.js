@@ -30,6 +30,7 @@ const createBillService = async (data) => {
             country: data.country,
             isDelivered: false,
             ticketId: data.ticketId,
+            status: false,
         });
 
         return funcReturn("create bill success", 0, []);

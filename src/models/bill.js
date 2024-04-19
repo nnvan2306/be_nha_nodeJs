@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
             country: DataTypes.STRING,
             isDelivered: DataTypes.BOOLEAN,
             ticketId: DataTypes.INTEGER,
+            status: DataTypes.BOOLEAN,
         },
         {
             sequelize,

@@ -104,6 +104,7 @@ class statisticController {
             let fetch = await statisticService.getStatisticSeasonService(
                 req.query.seasonId
             );
+
             return res
                 .status(fetch.errorCode === 0 ? 200 : 500)
                 .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
