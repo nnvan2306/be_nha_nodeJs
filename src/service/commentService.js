@@ -43,49 +43,25 @@ const getAllCommentService = async () => {
 
 const getLimitCommentService = async (page, pageSize, matchId) => {
     try {
-        // let offset = (page - 1) * pageSize;
+        let offset = (page - 1) * pageSize;
 
-        // let { count, rows } = await db.Comment.findAndCountAll({
-        //     offset: offset,
-        //     limit: pageSize,
-        //     include: [{ model: db.User }, { model: db.Feedback }],
-        // });
-
-        // let data = {
-        //     items: rows,
-        //     meta: {
-        //         currentPage: page,
-        //         totalIteams: count,
-        //         totalPages: Math.ceil(count / pageSize),
-        //     },
-        // };
-
-        let start = (page - 1) * 10;
-
-        let comments = await db.Comment.findAll({
-            where: {
-                [Op.and]: [
-                    { matchId: matchId },
-                    {
-                        [Op.or]: [
-                            { id: start + 1 },
-                            { id: start + 2 },
-                            { id: start + 3 },
-                            { id: start + 4 },
-                            { id: start + 5 },
-                            { id: start + 6 },
-                            { id: start + 7 },
-                            { id: start + 8 },
-                            { id: start + 9 },
-                            { id: start + 10 },
-                        ],
-                    },
-                ],
-            },
-            include: [{ model: db.User }, { model: db.Feedback }],
+        let { count, rows } = await db.Comment.findAndCountAll({
+            offset: offset,
+            limit: pageSize,
+            where: { matchId: matchId },
+            include: [{ model: db.Feedback }, { model: db.User }],
         });
 
-        return funcReturn("comments", 0, comments);
+        let data = {
+            items: rows,
+            meta: {
+                currentPage: page,
+                totalIteams: count,
+                totalPages: Math.ceil(count / pageSize),
+            },
+        };
+
+        return funcReturn("comments", 0, data);
     } catch (err) {
         console.log(err);
         return returnErrService();

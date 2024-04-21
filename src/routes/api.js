@@ -13,7 +13,7 @@ import stadiumController from "../controller/stadiumController";
 import standController from "../controller/standController";
 import billController from "../controller/billController";
 import emailController from "../controller/emailController";
-import commentController from "../controller/commentController";
+import commentController from "../controller/CommentController";
 import feedbackController from "../controller/feedbackController";
 import {
     upload,
