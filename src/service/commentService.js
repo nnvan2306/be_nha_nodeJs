@@ -1,6 +1,7 @@
 import db from "../models/index";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
+import match from "../models/match";
 const { Op, where } = require("sequelize");
 
 const handleGetOneComment = async (id) => {
@@ -43,21 +44,41 @@ const getAllCommentService = async () => {
 
 const getLimitCommentService = async (page, pageSize, matchId) => {
     try {
-        let offset = (page - 1) * pageSize;
+        // let offset = (page - 1) * pageSize;
 
-        let { count, rows } = await db.Comment.findAndCountAll({
-            offset: offset,
-            limit: pageSize,
+        // let { count, rows } = await db.Comment.findAndCountAll({
+        //     where: { matchId: matchId },
+        //     include: [{ model: db.User }, { model: db.Feedback }],
+        //     offset: offset,
+        //     limit: pageSize,
+        // });
+
+        // let data = {
+        //     items: rows,
+        //     meta: {
+        //         currentPage: page,
+        //         totalIteams: count,
+        //         totalPages: Math.ceil(count / pageSize),
+        //     },
+        // };
+
+        let start = (page - 1) * pageSize;
+        let comments = await db.Comment.findAll({
             where: { matchId: matchId },
-            include: [{ model: db.Feedback }, { model: db.User }],
+            include: [
+                { model: db.User },
+                { model: db.Feedback, include: [{ model: db.User }] },
+            ],
         });
 
         let data = {
-            items: rows,
+            items: comments.filter(
+                (item, index) => index >= start && index < start + pageSize
+            ),
             meta: {
                 currentPage: page,
-                totalIteams: count,
-                totalPages: Math.ceil(count / pageSize),
+                totalIteams: comments.length,
+                totalPages: Math.ceil(comments.length / pageSize),
             },
         };
 

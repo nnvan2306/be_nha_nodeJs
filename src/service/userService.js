@@ -87,6 +87,7 @@ const loginService = async (data) => {
             access_token: access_token,
             refresh_token: refresh_token,
             name: user.name,
+            id: user.id,
         });
     } catch (err) {
         console.log(err);
