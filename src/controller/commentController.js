@@ -8,13 +8,9 @@ class commentController {
         try {
             let data = req.body;
 
-            console.log(data);
-
             if (!data.content || !data.matchId || !data.userId) {
                 return res.status(404).json(returnInfoEmpty());
             }
-
-            console.log("create data");
 
             let dataBuider = {
                 ...data,
@@ -22,11 +18,7 @@ class commentController {
                 userId: +data.userId,
             };
 
-            console.log(dataBuider);
-
             let fetch = await commentService.createCommentService(dataBuider);
-
-            console.log(fetch);
 
             return res
                 .status(fetch.errorCode === 0 ? 200 : 500)
