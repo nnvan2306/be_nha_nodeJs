@@ -43,7 +43,7 @@ const getAllCommentService = async () => {
 
 const getLimitCommentService = async (page, pageSize, matchId) => {
     try {
-        let offset = (page - 1) * pageSize;
+        // let offset = (page - 1) * pageSize;
 
         // let { count, rows } = await db.Comment.findAndCountAll({
         //     offset: offset,
