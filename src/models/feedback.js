@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
             Feedback.belongsTo(models.User);
             Feedback.belongsTo(models.Comment);
+            Feedback.hasMany(models.LikeFeedback);
+            Feedback.hasMany(models.DislikeFeedback);
         }
     }
 

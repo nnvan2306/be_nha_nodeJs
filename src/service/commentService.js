@@ -68,6 +68,8 @@ const getLimitCommentService = async (page, pageSize, matchId) => {
             include: [
                 { model: db.User },
                 { model: db.Feedback, include: [{ model: db.User }] },
+                { model: db.LikeComment },
+                { model: db.DislikeComment },
             ],
         });
 
