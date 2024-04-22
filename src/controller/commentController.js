@@ -67,12 +67,13 @@ class commentController {
 
     async handleLikeComment(req, res) {
         try {
-            if (!req.body.commentId) {
+            if (!req.body.commentId || !req.body.userId) {
                 return res.status(404).json(returnInfoEmpty());
             }
 
             let fetch = await commentService.updateLikeCommentService(
                 +req.body.commentId,
+                +req.body.userId,
                 +req.body.isIncrease
             );
 
@@ -87,12 +88,13 @@ class commentController {
 
     async handleDislikeComment(req, res) {
         try {
-            if (!req.body.commentId) {
+            if (!req.body.commentId || !req.body.userId) {
                 return res.status(404).json(returnInfoEmpty());
             }
 
             let fetch = await commentService.updateDisLikeCommentService(
                 +req.body.commentId,
+                +req.body.userId,
                 +req.body.isIncrease
             );
 
