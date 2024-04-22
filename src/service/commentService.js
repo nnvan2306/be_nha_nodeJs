@@ -101,83 +101,6 @@ const deleteCommentService = async (id) => {
     }
 };
 
-// const updateLikeCommentService = async (commentId, userId, isIncrease) => {
-//     try {
-//         let comment = await handleGetOneComment(commentId);
-
-//         if (!comment) {
-//             return funcReturn("comment is not exits ", 1, []);
-//         }
-
-//         let countLikeNew = comment.like;
-//         let countDislikeNew = comment.disLike;
-
-//         if (isIncrease) {
-//             //check dislike is exit ? --true--> delete dislike
-//             let check =
-//                 await dislikeCommentService.handleGetDisLikeCommentService(
-//                     +commentId,
-//                     +userId
-//                 );
-//             if (check.errorCode) {
-//                 let deleteDislike =
-//                     await dislikeCommentService.handleDeleteDislikeComment(
-//                         +commentId,
-//                         +userId
-//                     );
-
-//                 if (deleteDislike.errorCode) {
-//                     return funcReturn("not delete dislike", 1, []);
-//                 }
-//                 countDislikeNew = countDislikeNew - 1;
-//             }
-
-//             //create likeComment
-//             let createLikeComment =
-//                 await likeCommentService.handleCreateLikeComment(
-//                     +commentId,
-//                     +userId
-//                 );
-
-//             if (createLikeComment.errorCode) {
-//                 return funcReturn("create faild", 1, []);
-//             }
-
-//             //update like
-//             countLikeNew = comment.like + 1;
-//         } else {
-//             let deleteLikeComment =
-//                 await likeCommentService.handleDeleteLikeComment(
-//                     +commentId,
-//                     +userId
-//                 );
-
-//             if (deleteLikeComment.errorCode) {
-//                 return funcReturn("create faild", 1, []);
-//             }
-
-//             if (comment.like === 0) {
-//                 countLikeNew = 0;
-//             } else {
-//                 countLikeNew = comment.like - 1;
-//             }
-//         }
-
-//         await db.Comment.update(
-//             {
-//                 like: countLikeNew,
-//                 disLike: countDislikeNew,
-//             },
-//             { where: { id: commentId } }
-//         );
-
-//         return funcReturn("update success", 0, []);
-//     } catch (err) {
-//         console.log(err);
-//         return returnErrService();
-//     }
-// };
-
 const updateLikeCommentService = async (commentId, userId) => {
     try {
         let comment = await handleGetOneComment(commentId);
@@ -252,7 +175,7 @@ const updateLikeCommentService = async (commentId, userId) => {
     }
 };
 
-const updateDisLikeCommentService = async (commentId, userId, isIncrease) => {
+const updateDisLikeCommentService = async (commentId, userId) => {
     try {
         let comment = await handleGetOneComment(commentId);
 
@@ -263,54 +186,55 @@ const updateDisLikeCommentService = async (commentId, userId, isIncrease) => {
         let countLikeNew = comment.like;
         let countDislikeNew = comment.disLike;
 
-        if (isIncrease) {
-            //check like is exit ? --true--> delete like
-            let check = await likeCommentService.handleGetLikeCommentService(
+        let dislikeComment =
+            await dislikeCommentService.handleGetDisLikeCommentService(
                 +commentId,
                 +userId
             );
-            if (check.errorCode) {
-                let deleteLike =
+
+        if (dislikeComment.errorCode) {
+            let deleteDisLikeComment =
+                await dislikeCommentService.handleDeleteDislikeComment(
+                    +commentId,
+                    +userId
+                );
+            if (deleteDisLikeComment.errorCode) {
+                return funcReturn("delete dislike Comment err", 1, []);
+            }
+
+            countDislikeNew = countDislikeNew - 1;
+        } else {
+            let checkLikeExit =
+                await likeCommentService.handleGetLikeCommentService(
+                    +commentId,
+                    +userId
+                );
+
+            if (checkLikeExit.errorCode) {
+                let deleteLikeComment =
                     await likeCommentService.handleDeleteLikeComment(
                         +commentId,
                         +userId
                     );
 
-                if (deleteLike.errorCode) {
-                    return funcReturn("not delete like", 1, []);
+                if (deleteLikeComment.errorCode) {
+                    return funcReturn("delete like comment err", 1, []);
                 }
                 countLikeNew = countLikeNew - 1;
             }
 
-            //create dislike
+            countDislikeNew = countDislikeNew + 1;
+
             let createDislikeComment =
                 await dislikeCommentService.handleCreateDislikeComment(
                     +commentId,
                     +userId
                 );
-
             if (createDislikeComment.errorCode) {
-                return funcReturn("create faild", 1, []);
-            }
-
-            countDislikeNew = comment.disLike + 1;
-        } else {
-            let deleteDislikeComment =
-                await dislikeCommentService.handleDeleteDislikeComment(
-                    +commentId,
-                    +userId
-                );
-
-            if (deleteDislikeComment.errorCode) {
-                return funcReturn("create faild", 1, []);
-            }
-
-            if (comment.disLike === 0) {
-                countDislikeNew = 0;
-            } else {
-                countDislikeNew = comment.disLike - 1;
+                return funcReturn("create dislike comment err", 1, []);
             }
         }
+
         await db.Comment.update(
             {
                 like: countLikeNew,

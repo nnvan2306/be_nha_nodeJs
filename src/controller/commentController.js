@@ -74,7 +74,6 @@ class commentController {
             let fetch = await commentService.updateLikeCommentService(
                 +req.body.commentId,
                 +req.body.userId
-                // +req.body.isIncrease
             );
 
             return res
@@ -94,8 +93,7 @@ class commentController {
 
             let fetch = await commentService.updateDisLikeCommentService(
                 +req.body.commentId,
-                +req.body.userId,
-                +req.body.isIncrease
+                +req.body.userId
             );
 
             return res
