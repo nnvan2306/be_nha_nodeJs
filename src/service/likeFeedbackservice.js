@@ -2,11 +2,11 @@ import db from "../models/index";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
 
-const handleGetLikeCommentService = async (commentId, userId) => {
+const handleGetLikeFeedbackService = async (feedbackId, userId) => {
     try {
-        let like = await db.LikeComment.findOne({
+        let like = await db.LikeFeedback.findOne({
             where: {
-                commentId: commentId,
+                feedbackId: feedbackId,
                 userId: userId,
             },
         });
@@ -22,10 +22,10 @@ const handleGetLikeCommentService = async (commentId, userId) => {
     }
 };
 
-const handleCreateLikeComment = async (commentId, userId) => {
+const handleCreateLikeFeedback = async (feedbackId, userId) => {
     try {
-        await db.LikeComment.create({
-            commentId: commentId,
+        await db.LikeFeedback.create({
+            feedbackId: feedbackId,
             userId: userId,
         });
 
@@ -36,10 +36,10 @@ const handleCreateLikeComment = async (commentId, userId) => {
     }
 };
 
-const handleDeleteLikeComment = async (commentId, userId) => {
+const handleDeleteLikeFeedback = async (feedbackId, userId) => {
     try {
-        await db.LikeComment.destroy({
-            where: { commentId: commentId, userId: userId },
+        await db.LikeFeedback.destroy({
+            where: { feedbackId: feedbackId, userId: userId },
         });
 
         return funcReturn("delete successfully", 0, []);
@@ -50,7 +50,7 @@ const handleDeleteLikeComment = async (commentId, userId) => {
 };
 
 module.exports = {
-    handleGetLikeCommentService,
-    handleCreateLikeComment,
-    handleDeleteLikeComment,
+    handleGetLikeFeedbackService,
+    handleCreateLikeFeedback,
+    handleDeleteLikeFeedback,
 };

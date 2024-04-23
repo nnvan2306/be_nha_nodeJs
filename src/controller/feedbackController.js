@@ -30,6 +30,18 @@ class feedbackController {
 
     async handleLikeFeedback(req, res) {
         try {
+            if (!req.body.feedbackId || !req.body.userId) {
+                return res.status(404).json(returnInfoEmpty());
+            }
+
+            let fetch = await feedbackService.updateLikeFeedbackService(
+                +req.body.feedbackId,
+                +req.body.userId
+            );
+
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());
@@ -38,6 +50,18 @@ class feedbackController {
 
     async handleDislikeFeedback(req, res) {
         try {
+            if (!req.body.feedbackId || !req.body.userId) {
+                return res.status(404).json(returnInfoEmpty());
+            }
+
+            let fetch = await feedbackService.updateDisLikeFeedbackService(
+                +req.body.feedbackId,
+                +req.body.userId
+            );
+
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());
