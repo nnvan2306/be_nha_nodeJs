@@ -49,8 +49,22 @@ const handleDeleteLikeComment = async (commentId, userId) => {
     }
 };
 
+const handleDeleteLikeCommentByCommentId = async (commentId) => {
+    try {
+        await db.LikeComment.destroy({
+            where: { commentId: commentId },
+        });
+
+        return funcReturn("delete successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     handleGetLikeCommentService,
     handleCreateLikeComment,
     handleDeleteLikeComment,
+    handleDeleteLikeCommentByCommentId,
 };

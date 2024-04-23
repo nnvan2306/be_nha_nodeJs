@@ -59,6 +59,17 @@ class commentController {
 
     async handleDeleteComment(req, res) {
         try {
+            if (!req.query.commentId) {
+                return res.status(404).json(returnInfoEmpty());
+            }
+
+            let fetch = await commentService.deleteCommentService(
+                +req.query.commentId
+            );
+
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());

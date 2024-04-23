@@ -49,6 +49,19 @@ const handleDeleteLikeFeedback = async (feedbackId, userId) => {
     }
 };
 
+// const handleDeleteLikeFeedbackById = async (feedbackId) => {
+//     try {
+//         await db.LikeFeedback.destroy({
+//             where: { feedbackId: feedbackId, userId: userId },
+//         });
+
+//         return funcReturn("delete successfully", 0, []);
+//     } catch (err) {
+//         console.log(err);
+//         return returnErrService();
+//     }
+// };
+
 module.exports = {
     handleGetLikeFeedbackService,
     handleCreateLikeFeedback,

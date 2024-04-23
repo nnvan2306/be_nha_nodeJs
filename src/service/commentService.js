@@ -5,6 +5,7 @@ import match from "../models/match";
 const { Op, where } = require("sequelize");
 import likeCommentService from "./likeCommentService";
 import dislikeCommentService from "./dislikeCommentService";
+import feedbackService from "./feedbackService";
 
 const handleGetOneComment = async (id) => {
     let comment = await db.Comment.findOne({
@@ -100,8 +101,19 @@ const getLimitCommentService = async (page, pageSize, matchId) => {
     }
 };
 
-const deleteCommentService = async (id) => {
+const deleteCommentService = async (commentId) => {
     try {
+        await db.Comment.destroy({
+            where: { id: commentId },
+        });
+        await likeCommentService.handleDeleteLikeCommentByCommentId(+commentId);
+        await dislikeCommentService.handleDeleteDislikeCommentByCommentId(
+            +commentId
+        );
+
+        // await feedbackService.deleteFeedbackByCommentId(+commentId);
+
+        return funcReturn("delete successfully", 1, 0);
     } catch (err) {
         console.log(err);
         return returnErrService();

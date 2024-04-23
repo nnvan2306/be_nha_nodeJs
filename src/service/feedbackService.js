@@ -3,6 +3,7 @@ import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
 import likeFeedbackService from "./likeFeedbackservice";
 import dislikeFeedbackService from "./dislikeFeedbackService";
+import { where } from "sequelize";
 
 const handleGetOneFeedback = async (id) => {
     let feedback = await db.Feedback.findOne({
@@ -188,6 +189,21 @@ const updateDisLikeFeedbackService = async (feedbackId, userId) => {
         );
 
         return funcReturn("update success", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+export const deleteFeedbackByCommentId = async (commentId) => {
+    try {
+        await db.Feedback.destroy({
+            where: {
+                commentId: commentId,
+            },
+        });
+
+        return funcReturn("delete success", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();
