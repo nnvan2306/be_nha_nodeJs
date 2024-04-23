@@ -3,7 +3,6 @@ import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
 import likeFeedbackService from "./likeFeedbackservice";
 import dislikeFeedbackService from "./dislikeFeedbackService";
-import { where } from "sequelize";
 
 const handleGetOneFeedback = async (id) => {
     let feedback = await db.Feedback.findOne({
