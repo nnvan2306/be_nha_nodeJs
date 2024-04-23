@@ -49,21 +49,22 @@ const handleDeleteLikeFeedback = async (feedbackId, userId) => {
     }
 };
 
-// const handleDeleteLikeFeedbackById = async (feedbackId) => {
-//     try {
-//         await db.LikeFeedback.destroy({
-//             where: { feedbackId: feedbackId, userId: userId },
-//         });
+const handleDeleteLikeFeedbackById = async (feedbackId) => {
+    try {
+        await db.LikeFeedback.destroy({
+            where: { feedbackId: feedbackId },
+        });
 
-//         return funcReturn("delete successfully", 0, []);
-//     } catch (err) {
-//         console.log(err);
-//         return returnErrService();
-//     }
-// };
+        return funcReturn("delete successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
 
 module.exports = {
     handleGetLikeFeedbackService,
     handleCreateLikeFeedback,
     handleDeleteLikeFeedback,
+    handleDeleteLikeFeedbackById,
 };

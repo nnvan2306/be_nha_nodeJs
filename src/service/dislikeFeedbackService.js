@@ -49,8 +49,22 @@ const handleDeleteDislikeFeedback = async (feedbackId, userId) => {
     }
 };
 
+const handleDeleteDislikeFeedbackById = async (feedbackId) => {
+    try {
+        await db.DislikeFeedback.destroy({
+            where: { feedbackId: feedbackId },
+        });
+
+        return funcReturn("delete successfully", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     handleGetDisLikeFeedbackService,
     handleCreateDislikeFeedback,
     handleDeleteDislikeFeedback,
+    handleDeleteDislikeFeedbackById,
 };

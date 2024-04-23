@@ -101,25 +101,6 @@ const getLimitCommentService = async (page, pageSize, matchId) => {
     }
 };
 
-const deleteCommentService = async (commentId) => {
-    try {
-        await db.Comment.destroy({
-            where: { id: commentId },
-        });
-        await likeCommentService.handleDeleteLikeCommentByCommentId(+commentId);
-        await dislikeCommentService.handleDeleteDislikeCommentByCommentId(
-            +commentId
-        );
-
-        // await feedbackService.deleteFeedbackByCommentId(+commentId);
-
-        return funcReturn("delete successfully", 1, 0);
-    } catch (err) {
-        console.log(err);
-        return returnErrService();
-    }
-};
-
 const updateLikeCommentService = async (commentId, userId) => {
     try {
         let comment = await handleGetOneComment(commentId);
@@ -263,6 +244,26 @@ const updateDisLikeCommentService = async (commentId, userId) => {
         );
 
         return funcReturn("update success", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const deleteCommentService = async (commentId) => {
+    try {
+        await db.Comment.destroy({
+            where: { id: commentId },
+        });
+
+        await likeCommentService.handleDeleteLikeCommentByCommentId(+commentId);
+        await dislikeCommentService.handleDeleteDislikeCommentByCommentId(
+            +commentId
+        );
+
+        await feedbackService.deleteFeedbackByCommentId(+commentId);
+
+        return funcReturn("delete successfully", 1, 0);
     } catch (err) {
         console.log(err);
         return returnErrService();

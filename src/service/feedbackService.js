@@ -13,8 +13,18 @@ const handleGetOneFeedback = async (id) => {
     return feedback;
 };
 
-const createFeedbackService = async (data) => {
+const createFeedbackService = async (content, commentId, userId) => {
+    console.log(content, commentId, userId);
     try {
+        await db.Feedback.create({
+            like: 0,
+            disLike: 0,
+            content: content,
+            commentId: commentId,
+            userId: userId,
+        });
+
+        return funcReturn("create success", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();
@@ -37,8 +47,18 @@ const getLimitFeedbackService = async (page, pageSize) => {
     }
 };
 
-const deleteFeedbackService = async (id) => {
+const deleteFeedbackService = async (feedbackId) => {
     try {
+        await db.Feedback.destroy({
+            where: { id: feedbackId },
+        });
+
+        await likeFeedbackService.handleDeleteLikeFeedbackById(+feedbackId);
+        await dislikeFeedbackService.handleDeleteDislikeFeedbackById(
+            +feedbackId
+        );
+
+        return funcReturn("delete successfully", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();

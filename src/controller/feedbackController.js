@@ -6,6 +6,19 @@ import feedbackService from "../service/feedbackService";
 class feedbackController {
     async handleCreateFeedback(req, res) {
         try {
+            let data = req.body;
+            if (!data.content || !data.commentId || !data.userId) {
+                return res.status(404).json(returnInfoEmpty());
+            }
+
+            let fetch = await feedbackService.createFeedbackService(
+                data.content,
+                +data.commentId,
+                +data.userId
+            );
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());
@@ -22,6 +35,17 @@ class feedbackController {
 
     async handleDeleteFeedback(req, res) {
         try {
+            if (!req.query.feedbackId) {
+                return res.status(404).json(returnInfoEmpty());
+            }
+
+            let fetch = await feedbackService.deleteFeedbackService(
+                +req.query.feedbackId
+            );
+
+            return res
+                .status(fetch.errorCode === 0 ? 200 : 500)
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());
