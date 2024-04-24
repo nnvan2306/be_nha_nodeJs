@@ -263,7 +263,7 @@ const deleteCommentService = async (commentId) => {
 
         await feedbackService.deleteFeedbackByCommentId(+commentId);
 
-        return funcReturn("delete successfully", 1, 0);
+        return funcReturn("delete successfully", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();

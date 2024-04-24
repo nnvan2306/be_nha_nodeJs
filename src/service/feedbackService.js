@@ -13,7 +13,6 @@ const handleGetOneFeedback = async (id) => {
 };
 
 const createFeedbackService = async (content, commentId, userId) => {
-    console.log(content, commentId, userId);
     try {
         await db.Feedback.create({
             like: 0,
@@ -236,4 +235,5 @@ module.exports = {
     deleteFeedbackService,
     updateLikeFeedbackService,
     updateDisLikeFeedbackService,
+    deleteFeedbackByCommentId,
 };
