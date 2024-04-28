@@ -173,6 +173,24 @@ class userController {
 
     async handleUpdateAvatarUSer(req, res) {
         try {
+            let dataBuider = {
+                ...req.body,
+                id: +req.body.id,
+            };
+
+            dataBuider.avatarNew = req?.file?.filename;
+
+            let fetch = await userService.updateAvatarService(dataBuider);
+
+            return res
+                .status(
+                    fetch.errorCode === 0
+                        ? 200
+                        : fetch.errorCode === 1
+                        ? 404
+                        : 500
+                )
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
         } catch (err) {
             console.log(err);
             return res.status(500).json(returnErrService());

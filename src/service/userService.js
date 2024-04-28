@@ -7,6 +7,7 @@ import {
 } from "../middleware/jwtAction";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
+import { handleRemoveAvatar } from "../middleware/removeImage";
 
 require("dotenv").config();
 
@@ -40,7 +41,7 @@ const registerService = async (data) => {
         await db.User.create({
             email: data.email,
             name: data.name,
-            avatar: "",
+            avatar_url: "",
             password: hashPassword,
             role: "user",
             isAdmin: 0,
@@ -87,7 +88,7 @@ const loginService = async (data) => {
         return funcReturn("login successfully", 0, {
             access_token: access_token,
             refresh_token: refresh_token,
-            avatar: user.avatar,
+            avatar: user.avatar_url,
             name: user.name,
             id: user.id,
         });
@@ -152,8 +153,49 @@ const updateUserService = async (data) => {
     }
 };
 
-const updateAvatarService = async () => {
+const updateAvatarService = async (data) => {
     try {
+        let check = await db.User.findOne({
+            where: { id: data.id },
+        });
+
+        if (!check) {
+            return funcReturn("user is not exits !", 1, []);
+        }
+
+        let user;
+
+        if (!data.avatar) {
+            await db.User.update({
+                avatar_url: `/images/${data.avatarNew}`,
+            });
+
+            user = await db.User.findOne({
+                where: { id: data.id },
+            });
+
+            return funcReturn("update success", 0, user.avatar_url);
+        }
+
+        let path = data.avatar.split("/images/")[1];
+        if (!handleRemoveAvatar(path)) {
+            return funcReturn("can not remove avatar old", 1, []);
+        }
+
+        await db.User.update(
+            {
+                avatar_url: `/images/${data.avatarNew}`,
+            },
+            {
+                where: { id: data.id },
+            }
+        );
+
+        user = await db.User.findOne({
+            where: { id: data.id },
+        });
+
+        return funcReturn("update success", 0, user.avatar_url);
     } catch (err) {
         console.log(err);
         return returnErrService();

@@ -110,28 +110,32 @@ const updatePlayerService = async (data) => {
                     where: { id: data.id },
                 }
             );
-        } else {
-            let path = data.avatar_url.split("/images/")[1];
-            if (handleRemoveAvatar(path)) {
-                await db.Player.update(
-                    {
-                        code: data.code,
-                        name: data.name,
-                        description: data.description,
-                        des_text: data.des_text,
-                        nationality: data.nationality,
-                        height: data.height,
-                        weight: data.weight,
-                        birthday: data.birthday,
-                        teamId: data.teamId,
-                        avatar_url: `/images/${data.avatar}`,
-                        isActive: data.isActive,
-                        location: data.location,
-                    },
-                    { where: { id: data.id } }
-                );
-            }
+            return funcReturn("update player successfully", 0, []);
         }
+
+        let path = data.avatar_url.split("/images/")[1];
+
+        if (!handleRemoveAvatar(path)) {
+            return funcReturn("can not remove avatar old", 1, []);
+        }
+
+        await db.Player.update(
+            {
+                code: data.code,
+                name: data.name,
+                description: data.description,
+                des_text: data.des_text,
+                nationality: data.nationality,
+                height: data.height,
+                weight: data.weight,
+                birthday: data.birthday,
+                teamId: data.teamId,
+                avatar_url: `/images/${data.avatar}`,
+                isActive: data.isActive,
+                location: data.location,
+            },
+            { where: { id: data.id } }
+        );
 
         return funcReturn("update player successfully", 0, []);
     } catch (err) {
