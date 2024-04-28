@@ -142,6 +142,34 @@ class userController {
             return res.status(500).json(returnErrService());
         }
     }
+
+    async handleUpdateUser(req, res) {
+        try {
+            if (!req.body.id || !req.body.name) {
+                return res.status(400).json(returnInfoEmpty());
+            }
+
+            let dataBuider = {
+                ...req.body,
+                id: +req.body.id,
+            };
+
+            const fetch = await userService.updateUserService(dataBuider);
+
+            return res
+                .status(
+                    fetch.errorCode === 0
+                        ? 200
+                        : fetch.errorCode === 1
+                        ? 404
+                        : 500
+                )
+                .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
+        }
+    }
 }
 
 module.exports = new userController();

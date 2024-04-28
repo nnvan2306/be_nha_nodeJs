@@ -7,6 +7,7 @@ import {
 } from "../middleware/jwtAction";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
+import { where } from "sequelize";
 
 require("dotenv").config();
 
@@ -124,8 +125,35 @@ const refreshTokenService = async (token) => {
     }
 };
 
+const updateUserService = async (data) => {
+    try {
+        const check = await db.User.findOne({
+            where: { id: data.id },
+        });
+
+        if (!check) {
+            return funcReturn("user is not exits", 1, []);
+        }
+
+        await db.User.update(
+            {
+                name: data.name,
+            },
+            {
+                where: { id: data.id },
+            }
+        );
+
+        return funcReturn("update success", 0, []);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     registerService,
     loginService,
     refreshTokenService,
+    updateUserService,
 };

@@ -35,6 +35,7 @@ const initApiRoutes = (app) => {
     router.post("/login", userController.handleLogin);
     router.post("/logout", userController.handleLogout);
     router.post("/check-role-admin", jwtAction.handleCheckRoleAdmin);
+    router.put("/update-user", userController.handleUpdateUser);
 
     //
     //
