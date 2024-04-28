@@ -18,6 +18,7 @@ import feedbackController from "../controller/feedbackController";
 import {
     upload,
     uploadAvatar,
+    uploadAvatarUser,
     uploadMatch,
     uploadStadium,
 } from "../middleware/multer";
@@ -35,6 +36,11 @@ const initApiRoutes = (app) => {
     router.post("/logout", userController.handleLogout);
     router.post("/check-role-admin", jwtAction.handleCheckRoleAdmin);
     router.put("/update-user", userController.handleUpdateUser);
+    router.put(
+        "/update-avatar-user",
+        uploadAvatarUser.single("file"),
+        userController.handleUpdateAvatarUSer
+    );
 
     //
     //

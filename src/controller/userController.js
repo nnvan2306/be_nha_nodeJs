@@ -170,6 +170,14 @@ class userController {
             return res.status(500).json(returnErrService());
         }
     }
+
+    async handleUpdateAvatarUSer(req, res) {
+        try {
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json(returnErrService());
+        }
+    }
 }
 
 module.exports = new userController();

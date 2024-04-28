@@ -31,6 +31,7 @@ app.use("/v1/images", express.static(__dirname + "/public/avatarPlayers"));
 app.use("/v1/images", express.static(__dirname + "/public/nhaImages"));
 app.use("/v1/videos", express.static(__dirname + "/public/matchs"));
 app.use("/v1/images", express.static(__dirname + "/public/stadiums"));
+app.use("/v1/images", express.static(__dirname + "/public/avatarUsers"));
 
 //init API routes
 initApiRoutes(app);

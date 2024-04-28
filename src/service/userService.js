@@ -7,7 +7,6 @@ import {
 } from "../middleware/jwtAction";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
-import { where } from "sequelize";
 
 require("dotenv").config();
 
@@ -41,6 +40,7 @@ const registerService = async (data) => {
         await db.User.create({
             email: data.email,
             name: data.name,
+            avatar: "",
             password: hashPassword,
             role: "user",
             isAdmin: 0,
@@ -87,6 +87,7 @@ const loginService = async (data) => {
         return funcReturn("login successfully", 0, {
             access_token: access_token,
             refresh_token: refresh_token,
+            avatar: user.avatar,
             name: user.name,
             id: user.id,
         });
@@ -151,9 +152,18 @@ const updateUserService = async (data) => {
     }
 };
 
+const updateAvatarService = async () => {
+    try {
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
 module.exports = {
     registerService,
     loginService,
     refreshTokenService,
     updateUserService,
+    updateAvatarService,
 };
