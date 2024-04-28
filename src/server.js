@@ -6,8 +6,8 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 require("dotenv").config();
 //test create socket
-const http = require("http");
-const server = http.createServer(app);
+// const http = require("http");
+// const server = http.createServer(app);
 
 const app = express();
 const PORT = process.env.PORT || 8081;

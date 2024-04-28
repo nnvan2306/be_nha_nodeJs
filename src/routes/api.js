@@ -23,7 +23,6 @@ import {
 } from "../middleware/multer";
 
 import jwtAction from "../middleware/jwtAction";
-import scored from "../models/scored";
 
 const router = express.Router();
 
