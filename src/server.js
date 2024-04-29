@@ -5,15 +5,29 @@ import configCors from "./config/configCors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 require("dotenv").config();
-//test create socket
-// const http = require("http");
-// const server = http.createServer(app);
 
 const app = express();
 const PORT = process.env.PORT || 8081;
 
 // config cors
 configCors(app);
+
+//test create socket
+const { createServer } = require("node:http");
+const server = createServer(app);
+const { Server } = require("socket.io");
+export const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+    },
+});
+
+// console.log(io);
+
+io.on("connection", (socket) => {
+    console.log("a user connected");
+});
 
 //config body parser
 app.use(bodyParser.json());
