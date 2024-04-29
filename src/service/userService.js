@@ -216,7 +216,6 @@ const removeAvatarService = async (data) => {
         }
 
         let path = data.avatar.split("/images/")[1];
-        console.log(path);
         if (!handleRemoveUserAvatar(path)) {
             return funcReturn("can not remove avatar !", 1, []);
         }
