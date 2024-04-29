@@ -35,12 +35,13 @@ const initApiRoutes = (app) => {
     router.post("/login", userController.handleLogin);
     router.post("/logout", userController.handleLogout);
     router.post("/check-role-admin", jwtAction.handleCheckRoleAdmin);
-    router.put("/update-user", userController.handleUpdateUser);
-    router.put(
+    router.patch("/update-name-user", userController.handleUpdateUser);
+    router.patch(
         "/update-avatar-user",
         uploadAvatarUser.single("file"),
         userController.handleUpdateAvatarUSer
     );
+    router.patch("/remove-avatar", userController.handleRemoveAvatar);
 
     //
     //

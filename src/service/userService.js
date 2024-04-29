@@ -7,7 +7,7 @@ import {
 } from "../middleware/jwtAction";
 import returnErrService from "../helps/returnErrService";
 import funcReturn from "../helps/funcReturn";
-import { handleRemoveAvatar } from "../middleware/removeImage";
+import { handleRemoveUserAvatar } from "../middleware/removeImage";
 
 require("dotenv").config();
 
@@ -163,14 +163,17 @@ const updateAvatarService = async (data) => {
             return funcReturn("user is not exits !", 1, []);
         }
 
-        let user;
-
         if (!data.avatar) {
-            await db.User.update({
-                avatar_url: `/images/${data.avatarNew}`,
-            });
+            await db.User.update(
+                {
+                    avatar_url: `/images/${data.avatarNew}`,
+                },
+                {
+                    where: { id: data.id },
+                }
+            );
 
-            user = await db.User.findOne({
+            let user = await db.User.findOne({
                 where: { id: data.id },
             });
 
@@ -178,7 +181,7 @@ const updateAvatarService = async (data) => {
         }
 
         let path = data.avatar.split("/images/")[1];
-        if (!handleRemoveAvatar(path)) {
+        if (!handleRemoveUserAvatar(path)) {
             return funcReturn("can not remove avatar old", 1, []);
         }
 
@@ -191,11 +194,43 @@ const updateAvatarService = async (data) => {
             }
         );
 
-        user = await db.User.findOne({
+        let user = await db.User.findOne({
             where: { id: data.id },
         });
 
         return funcReturn("update success", 0, user.avatar_url);
+    } catch (err) {
+        console.log(err);
+        return returnErrService();
+    }
+};
+
+const removeAvatarService = async (data) => {
+    try {
+        let check = await db.User.findOne({
+            where: { id: data.id },
+        });
+
+        if (!check) {
+            return funcReturn("user is not exits !", 1, []);
+        }
+
+        let path = data.avatar.split("/images/")[1];
+        console.log(path);
+        if (!handleRemoveUserAvatar(path)) {
+            return funcReturn("can not remove avatar !", 1, []);
+        }
+
+        await db.User.update(
+            {
+                avatar_url: "",
+            },
+            {
+                where: { id: data.id },
+            }
+        );
+
+        return funcReturn("update successful", 0, []);
     } catch (err) {
         console.log(err);
         return returnErrService();
@@ -208,4 +243,5 @@ module.exports = {
     refreshTokenService,
     updateUserService,
     updateAvatarService,
+    removeAvatarService,
 };

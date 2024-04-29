@@ -55,3 +55,17 @@ export const handleRemoveStadiumImage = (path) => {
         return false;
     }
 };
+
+export const handleRemoveUserAvatar = (path) => {
+    if (path) {
+        fs.unlink(`./src/public/avatarUsers/${path}`, (err) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        });
+        return true;
+    } else {
+        return false;
+    }
+};
