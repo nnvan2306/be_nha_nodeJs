@@ -15,7 +15,7 @@ const handleGetOneComment = async (id) => {
     return comment;
 };
 
-const createCommentService = async (data) => {
+const createCommentService = async (data, type = "ref") => {
     try {
         await db.Comment.create({
             content: data.content,
@@ -25,6 +25,9 @@ const createCommentService = async (data) => {
             userId: data.userId,
         });
 
+        if (type !== "ref") {
+            return getAllCommentService();
+        }
         return funcReturn("create comment successfully", 0, []);
     } catch (err) {
         console.log(err);

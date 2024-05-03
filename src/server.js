@@ -4,29 +4,40 @@ import initApiRoutes from "./routes/api";
 import configCors from "./config/configCors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import { createCommentService } from "./service/commentService";
+import { createCommentSocket } from "./service/socketComment";
+import { Socket } from "socket.io";
 require("dotenv").config();
 
 const app = express();
+const http = require("http").createServer(app);
 const PORT = process.env.PORT || 8081;
 
 // config cors
 configCors(app);
 
-//test create socket
-const { createServer } = require("node:http");
-const server = createServer(app);
-const { Server } = require("socket.io");
-export const io = new Server(server, {
+//connect socket
+const io = require("socket.io")(http, {
     cors: {
         origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     },
 });
 
-// console.log(io);
+// io.on("connect", (socket) => {
+//     // console.log(socket);
+//     socket.on("connected", (value) => {
+//         if (!value) return;
 
-io.on("connection", (socket) => {
-    console.log("a user connected");
+//         socket.on("replycm", async (data) => {
+//             const comments = await createCommentService(data, "socket");
+//             socket.emit("reply_suc", comments);
+//         });
+//     });
+// });
+
+io.on("connect", (socket) => {
+    createCommentSocket(socket);
 });
 
 //config body parser
@@ -50,6 +61,6 @@ app.use("/v1/images", express.static(__dirname + "/public/avatarUsers"));
 //init API routes
 initApiRoutes(app);
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
     console.log("backend is running on post :", PORT);
 });
