@@ -24,18 +24,6 @@ const io = require("socket.io")(http, {
     },
 });
 
-// io.on("connect", (socket) => {
-//     // console.log(socket);
-//     socket.on("connected", (value) => {
-//         if (!value) return;
-
-//         socket.on("replycm", async (data) => {
-//             const comments = await createCommentService(data, "socket");
-//             socket.emit("reply_suc", comments);
-//         });
-//     });
-// });
-
 io.on("connect", (socket) => {
     createCommentSocket(socket);
 });
