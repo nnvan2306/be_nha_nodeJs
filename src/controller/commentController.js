@@ -91,9 +91,13 @@ class commentController {
                 return res.status(404).json(returnInfoEmpty());
             }
 
+            let dataBuider = {
+                commentId: +req.body.commentId,
+                userId: +req.body.userId,
+            };
+
             let fetch = await commentService.updateLikeCommentService(
-                +req.body.commentId,
-                +req.body.userId
+                dataBuider
             );
 
             return res
@@ -111,9 +115,13 @@ class commentController {
                 return res.status(404).json(returnInfoEmpty());
             }
 
+            let dataBuider = {
+                commentId: +req.body.commentId,
+                userId: +req.body.userId,
+            };
+
             let fetch = await commentService.updateDisLikeCommentService(
-                +req.body.commentId,
-                +req.body.userId
+                dataBuider
             );
 
             return res
