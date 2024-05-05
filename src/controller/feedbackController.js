@@ -11,11 +11,14 @@ class feedbackController {
                 return res.status(404).json(returnInfoEmpty());
             }
 
-            let fetch = await feedbackService.createFeedbackService(
-                data.content,
-                +data.commentId,
-                +data.userId
-            );
+            let dataBuider = {
+                content: data.content,
+                commentId: +data.commentId,
+                userId: +data.userId,
+                matchId: +data.matchId,
+            };
+
+            let fetch = await feedbackService.createFeedbackService(dataBuider);
             return res
                 .status(fetch.errorCode === 0 ? 200 : 500)
                 .json(funcReturn(fetch.message, fetch.errorCode, fetch.data));
@@ -39,9 +42,12 @@ class feedbackController {
                 return res.status(404).json(returnInfoEmpty());
             }
 
-            let fetch = await feedbackService.deleteFeedbackService(
-                +req.query.feedbackId
-            );
+            let dataBuider = {
+                feedbackId: +req.query.feedbackId,
+                matchId: +req.query.matchId,
+            };
+
+            let fetch = await feedbackService.deleteFeedbackService(dataBuider);
 
             return res
                 .status(fetch.errorCode === 0 ? 200 : 500)
@@ -58,9 +64,14 @@ class feedbackController {
                 return res.status(404).json(returnInfoEmpty());
             }
 
+            let dataBuider = {
+                feedbackId: +req.body.feedbackId,
+                userId: +req.body.userId,
+                matchId: +req.body.matchId,
+            };
+
             let fetch = await feedbackService.updateLikeFeedbackService(
-                +req.body.feedbackId,
-                +req.body.userId
+                dataBuider
             );
 
             return res
@@ -78,9 +89,14 @@ class feedbackController {
                 return res.status(404).json(returnInfoEmpty());
             }
 
+            let dataBuider = {
+                feedbackId: +req.body.feedbackId,
+                userId: +req.body.userId,
+                matchId: +req.body.matchId,
+            };
+
             let fetch = await feedbackService.updateDisLikeFeedbackService(
-                +req.body.feedbackId,
-                +req.body.userId
+                dataBuider
             );
 
             return res

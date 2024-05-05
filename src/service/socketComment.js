@@ -3,7 +3,15 @@ import {
     updateLikeCommentService,
     updateDisLikeCommentService,
     deleteCommentService,
-} from "../service/commentService";
+    getLimitCommentService,
+} from "./commentService";
+
+import {
+    createFeedbackService,
+    deleteFeedbackService,
+    updateLikeFeedbackService,
+    updateDisLikeFeedbackService,
+} from "./feedbackService";
 
 export const createCommentSocket = async (socket) => {
     socket.on("connected", (value) => {
@@ -20,16 +28,51 @@ export const createCommentSocket = async (socket) => {
         });
 
         socket.on("likeComment", async (data) => {
-            const likeComment = await updateLikeCommentService(data, "socket");
-            socket.emit("likeCommentSuccess", likeComment);
+            const comments = await updateLikeCommentService(data, "socket");
+            socket.emit("likeCommentSuccess", comments);
         });
 
         socket.on("dislikeComment", async (data) => {
-            const likeComment = await updateDisLikeCommentService(
+            const comments = await updateDisLikeCommentService(data, "socket");
+            socket.emit("dislikeCommentSuccess", comments);
+        });
+
+        socket.on("createFeedback", async (data) => {
+            const comments = await createFeedbackService(
                 data,
-                "socket"
+                "socket",
+                getLimitCommentService
             );
-            socket.emit("dislikeCommentSuccess", likeComment);
+            socket.emit("createFeedbackSuccess", comments);
+        });
+
+        socket.on("deleteFeedback", async (data) => {
+            const comments = await deleteFeedbackService(
+                data,
+                "socket",
+                getLimitCommentService
+            );
+            socket.emit("deleteFeedbackSuccess", comments);
+        });
+
+        socket.on("likeFeedback", async (data) => {
+            const comments = await updateLikeFeedbackService(
+                data,
+                "socket",
+                getLimitCommentService
+            );
+            socket.emit("likeFeedbackSuccess", comments);
+        });
+
+        // dislike feedback
+
+        socket.on("dislikeFeedback", async (data) => {
+            const comments = await updateDisLikeFeedbackService(
+                data,
+                "socket",
+                getLimitCommentService
+            );
+            socket.emit("dislikeFeedbackSuccess", comments);
         });
     });
 };

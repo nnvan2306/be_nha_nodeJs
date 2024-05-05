@@ -12,15 +12,23 @@ const handleGetOneFeedback = async (id) => {
     return feedback;
 };
 
-const createFeedbackService = async (content, commentId, userId) => {
+const createFeedbackService = async (
+    data,
+    type = "ref",
+    getLimitCommentService
+) => {
     try {
         await db.Feedback.create({
             like: 0,
             disLike: 0,
-            content: content,
-            commentId: commentId,
-            userId: userId,
+            content: data.content,
+            commentId: data.commentId,
+            userId: data.userId,
         });
+
+        if (type !== "ref") {
+            return getLimitCommentService(1, 10, +data.matchId);
+        }
 
         return funcReturn("create success", 0, []);
     } catch (err) {
@@ -45,16 +53,26 @@ const getLimitFeedbackService = async (page, pageSize) => {
     }
 };
 
-const deleteFeedbackService = async (feedbackId) => {
+const deleteFeedbackService = async (
+    data,
+    type = "ref",
+    getLimitCommentService
+) => {
     try {
         await db.Feedback.destroy({
-            where: { id: feedbackId },
+            where: { id: +data.feedbackId },
         });
 
-        await likeFeedbackService.handleDeleteLikeFeedbackById(+feedbackId);
-        await dislikeFeedbackService.handleDeleteDislikeFeedbackById(
-            +feedbackId
+        await likeFeedbackService.handleDeleteLikeFeedbackById(
+            +data.feedbackId
         );
+        await dislikeFeedbackService.handleDeleteDislikeFeedbackById(
+            +data.feedbackId
+        );
+
+        if (type !== "ref") {
+            return getLimitCommentService(1, 10, +data.matchId);
+        }
 
         return funcReturn("delete successfully", 0, []);
     } catch (err) {
@@ -63,9 +81,13 @@ const deleteFeedbackService = async (feedbackId) => {
     }
 };
 
-const updateLikeFeedbackService = async (feedbackId, userId) => {
+const updateLikeFeedbackService = async (
+    data,
+    type = "ref",
+    getLimitCommentService
+) => {
     try {
-        let feedback = await handleGetOneFeedback(feedbackId);
+        let feedback = await handleGetOneFeedback(+data.feedbackId);
 
         if (!feedback) {
             return funcReturn("comment is not exits ", 1, []);
@@ -76,15 +98,15 @@ const updateLikeFeedbackService = async (feedbackId, userId) => {
 
         let likeFeedback =
             await likeFeedbackService.handleGetLikeFeedbackService(
-                +feedbackId,
-                +userId
+                +data.feedbackId,
+                +data.userId
             );
 
         if (likeFeedback.errorCode) {
             let deleteLikeFeedback =
                 await likeFeedbackService.handleDeleteLikeFeedback(
-                    +feedbackId,
-                    +userId
+                    +data.feedbackId,
+                    +data.userId
                 );
             if (deleteLikeFeedback.errorCode) {
                 return funcReturn("delete like feedback err", 1, []);
@@ -94,15 +116,15 @@ const updateLikeFeedbackService = async (feedbackId, userId) => {
         } else {
             let checkDislikeExit =
                 await dislikeFeedbackService.handleGetDisLikeFeedbackService(
-                    +feedbackId,
-                    +userId
+                    +data.feedbackId,
+                    +data.userId
                 );
 
             if (checkDislikeExit.errorCode) {
                 let deleteDislikeFeedback =
                     await dislikeFeedbackService.handleDeleteDislikeFeedback(
-                        +feedbackId,
-                        +userId
+                        +data.feedbackId,
+                        +data.userId
                     );
 
                 if (deleteDislikeFeedback.errorCode) {
@@ -115,8 +137,8 @@ const updateLikeFeedbackService = async (feedbackId, userId) => {
 
             let createLikeFeedback =
                 await likeFeedbackService.handleCreateLikeFeedback(
-                    +feedbackId,
-                    +userId
+                    +data.feedbackId,
+                    +data.userId
                 );
             if (createLikeFeedback.errorCode) {
                 return funcReturn("create like feedback err", 1, []);
@@ -128,8 +150,12 @@ const updateLikeFeedbackService = async (feedbackId, userId) => {
                 like: countLikeNew,
                 disLike: countDislikeNew,
             },
-            { where: { id: feedbackId } }
+            { where: { id: +data.feedbackId } }
         );
+
+        if (type !== "ref") {
+            return getLimitCommentService(1, 10, +data.matchId);
+        }
 
         return funcReturn("update success", 0, []);
     } catch (err) {
@@ -138,9 +164,13 @@ const updateLikeFeedbackService = async (feedbackId, userId) => {
     }
 };
 
-const updateDisLikeFeedbackService = async (feedbackId, userId) => {
+const updateDisLikeFeedbackService = async (
+    data,
+    type = "ref",
+    getLimitCommentService
+) => {
     try {
-        let feedback = await handleGetOneFeedback(feedbackId);
+        let feedback = await handleGetOneFeedback(+data.feedbackId);
 
         if (!feedback) {
             return funcReturn("feedback is not exits ", 1, []);
@@ -151,15 +181,15 @@ const updateDisLikeFeedbackService = async (feedbackId, userId) => {
 
         let dislikeFeedback =
             await dislikeFeedbackService.handleGetDisLikeFeedbackService(
-                +feedbackId,
-                +userId
+                +data.feedbackId,
+                +data.userId
             );
 
         if (dislikeFeedback.errorCode) {
             let deleteDisLikeFeedback =
                 await dislikeFeedbackService.handleDeleteDislikeFeedback(
-                    +feedbackId,
-                    +userId
+                    +data.feedbackId,
+                    +data.userId
                 );
             if (deleteDisLikeFeedback.errorCode) {
                 return funcReturn("delete dislike feedback err", 1, []);
@@ -169,15 +199,15 @@ const updateDisLikeFeedbackService = async (feedbackId, userId) => {
         } else {
             let checkLikeExit =
                 await likeFeedbackService.handleGetLikeFeedbackService(
-                    +feedbackId,
-                    +userId
+                    +data.feedbackId,
+                    +data.userId
                 );
 
             if (checkLikeExit.errorCode) {
                 let deleteLikeFeedback =
                     await likeFeedbackService.handleDeleteLikeFeedback(
-                        +feedbackId,
-                        +userId
+                        +data.feedbackId,
+                        +data.userId
                     );
 
                 if (deleteLikeFeedback.errorCode) {
@@ -190,8 +220,8 @@ const updateDisLikeFeedbackService = async (feedbackId, userId) => {
 
             let createDislikeFeedback =
                 await dislikeFeedbackService.handleCreateDislikeFeedback(
-                    +feedbackId,
-                    +userId
+                    +data.feedbackId,
+                    +data.userId
                 );
             if (createDislikeFeedback.errorCode) {
                 return funcReturn("create dislike feedback err", 1, []);
@@ -203,8 +233,12 @@ const updateDisLikeFeedbackService = async (feedbackId, userId) => {
                 like: countLikeNew,
                 disLike: countDislikeNew,
             },
-            { where: { id: feedbackId } }
+            { where: { id: +data.feedbackId } }
         );
+
+        if (type !== "ref") {
+            return getLimitCommentService(1, 10, +data.matchId);
+        }
 
         return funcReturn("update success", 0, []);
     } catch (err) {
