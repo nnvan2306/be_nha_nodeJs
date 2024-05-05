@@ -259,18 +259,24 @@ const updateDisLikeCommentService = async (data, type = "ref") => {
     }
 };
 
-const deleteCommentService = async (commentId) => {
+const deleteCommentService = async (data, type = "ref") => {
     try {
         await db.Comment.destroy({
-            where: { id: commentId },
+            where: { id: data.commentId },
         });
 
-        await likeCommentService.handleDeleteLikeCommentByCommentId(+commentId);
+        await likeCommentService.handleDeleteLikeCommentByCommentId(
+            data.commentId
+        );
         await dislikeCommentService.handleDeleteDislikeCommentByCommentId(
-            +commentId
+            data.commentId
         );
 
-        await feedbackService.deleteFeedbackByCommentId(+commentId);
+        await feedbackService.deleteFeedbackByCommentId(data.commentId);
+
+        if (type !== "ref") {
+            return getLimitCommentService(1, 10, data.matchId);
+        }
 
         return funcReturn("delete successfully", 0, []);
     } catch (err) {

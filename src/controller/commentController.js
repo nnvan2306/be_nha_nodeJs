@@ -72,9 +72,11 @@ class commentController {
                 return res.status(404).json(returnInfoEmpty());
             }
 
-            let fetch = await commentService.deleteCommentService(
-                +req.query.commentId
-            );
+            let dataBuider = {
+                commentId: +req.query.commentId,
+            };
+
+            let fetch = await commentService.deleteCommentService(dataBuider);
 
             return res
                 .status(fetch.errorCode === 0 ? 200 : 500)
