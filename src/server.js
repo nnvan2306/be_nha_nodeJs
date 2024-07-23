@@ -14,6 +14,10 @@ const PORT = process.env.PORT || 8081;
 // config cors
 configCors(app);
 
+app.use("https://be-nha-node-js.vercel.app/test", () => {
+    return "ok";
+});
+
 //connect socket
 const io = require("socket.io")(http, {
     cors: {
