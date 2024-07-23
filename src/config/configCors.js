@@ -4,7 +4,8 @@ export default function configCors(app) {
     app.use((req, res, next) => {
         res.setHeader(
             "Access-Control-Allow-Origin",
-            process.env.REACT_URL && process.env.NEXT_URL
+            process.env.REACT_URL
+            // && process.env.NEXT_URL
         );
         res.setHeader(
             "Access-Control-Allow-Methods",

@@ -4,9 +4,7 @@ import initApiRoutes from "./routes/api";
 import configCors from "./config/configCors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import { createCommentService } from "./service/commentService";
 import { createCommentSocket } from "./service/socketComment";
-import { Socket } from "socket.io";
 require("dotenv").config();
 
 const app = express();
