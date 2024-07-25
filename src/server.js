@@ -35,7 +35,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //test connection
-testConnection();
+
+try {
+    testConnection();
+} catch (error) {
+    console.log(error);
+}
 
 //config cookie-parser
 app.use(cookieParser());
