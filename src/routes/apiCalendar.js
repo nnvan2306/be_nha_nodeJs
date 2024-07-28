@@ -1,0 +1,29 @@
+import calendarController from "../controller/calendarController";
+import jwtAction from "../middleware/jwtAction";
+
+const initApiCalendar = (app) => {
+    router.post(
+        "/create-calendar",
+        jwtAction.handleCheckToken,
+        calendarController.handleCreateCalendar
+    );
+    router.get("/get-calender", calendarController.handleGetCalendar);
+    router.delete(
+        "/delete-calendar",
+        jwtAction.handleCheckToken,
+        calendarController.handleDeleteCalendar
+    );
+    router.put(
+        "/update-calendar",
+        jwtAction.handleCheckToken,
+        calendarController.handleUpdateCalendar
+    );
+    router.get(
+        "/get-nearest-calendar",
+        calendarController.handleGetNearestCalendar
+    );
+
+    return app.use("/v1", router);
+};
+
+export default initApiCalendar;

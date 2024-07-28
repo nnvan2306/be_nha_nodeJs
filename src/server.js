@@ -14,10 +14,6 @@ const PORT = process.env.PORT || 8081;
 // config cors
 configCors(app);
 
-app.get("/test", (req, res) => {
-    res.send("ok");
-});
-
 //connect socket
 const io = require("socket.io")(http, {
     cors: {
@@ -35,7 +31,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //test connection
-
 try {
     testConnection();
 } catch (error) {
