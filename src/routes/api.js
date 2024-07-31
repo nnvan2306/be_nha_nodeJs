@@ -26,7 +26,7 @@ import initApiEmail from "./apiEmail";
 import initApiComment from "./apiComment";
 import initApiFeedback from "./apiFeedback";
 
-const router = express.Router();
+// const router = express.Router();
 
 const initApiRoutes = (app) => {
     initApiUser(app);
