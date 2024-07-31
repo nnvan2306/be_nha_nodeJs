@@ -20,12 +20,15 @@ class billController {
             ) {
                 return res.status(404).json(returnInfoEmpty());
             }
+
             let dataBuider = {
                 ...req.body,
                 ticketId: +req.body.ticketId,
                 totalTicket: +req.body.totalTicket,
             };
+
             let fetch = await billService.createBillService(dataBuider);
+
             return res
                 .status(
                     fetch.errorCode === 0
@@ -46,7 +49,9 @@ class billController {
             if (!req.query.uuid) {
                 return res.status(404).json(returnInfoEmpty());
             }
+
             let fetch = await billService.deleteBillService(req.query.uuid);
+
             return res
                 .status(
                     fetch.errorCode === 0

@@ -16,6 +16,7 @@ class calendarController {
             ) {
                 return res.status(400).json(returnInfoEmpty());
             }
+
             if (data.guestId === data.hostId) {
                 return res
                     .status(404)
@@ -23,12 +24,14 @@ class calendarController {
                         funcReturn("hostId and guestId muestn't equal", 1, [])
                     );
             }
+
             let dataBuider = {
                 ...data,
                 hostId: +data.hostId,
                 guestId: +data.guestId,
                 stadiumId: +data.stadiumId,
             };
+
             let fetch = await calendarService.crateCalendarService(dataBuider);
 
             return res
