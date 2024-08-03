@@ -1,5 +1,8 @@
 import calendarController from "../controller/calendarController";
 import jwtAction from "../middleware/jwtAction";
+import express from "express";
+
+const router = express.Router();
 
 const initApiCalendar = (app) => {
     router.post(

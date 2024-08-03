@@ -1,5 +1,8 @@
 import jwtAction from "../middleware/jwtAction";
 import scoredController from "../controller/scoredController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiScore = (app) => {
     router.get("/get-scored", scoredController.handleGetScored);

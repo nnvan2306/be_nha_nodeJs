@@ -1,8 +1,11 @@
 import jwtAction from "../middleware/jwtAction";
 import matchController from "../controller/matchController";
 import { uploadMatch } from "../middleware/multer";
+import express from "express";
 
-const initApiMatch = () => {
+const router = express.Router();
+
+const initApiMatch = (app) => {
     router.post(
         "/create-match",
         jwtAction.handleCheckToken,

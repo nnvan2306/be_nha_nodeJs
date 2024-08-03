@@ -1,4 +1,7 @@
 import feedbackController from "../controller/feedbackController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiFeedback = (app) => {
     router.post("/create-feedback", feedbackController.handleCreateFeedback);

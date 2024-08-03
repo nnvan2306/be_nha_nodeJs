@@ -1,4 +1,7 @@
 import emailController from "../controller/emailController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiEmail = (app) => {
     router.post("/send-email", emailController.handleSendEmail);

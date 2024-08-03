@@ -1,5 +1,8 @@
 import jwtAction from "../middleware/jwtAction";
 import seasonController from "../controller/seasonController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiSeason = (app) => {
     router.post(

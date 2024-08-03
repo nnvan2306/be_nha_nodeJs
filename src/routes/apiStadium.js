@@ -1,6 +1,9 @@
 import jwtAction from "../middleware/jwtAction";
 import stadiumController from "../controller/stadiumController";
 import { uploadStadium } from "../middleware/multer";
+import express from "express";
+
+const router = express.Router();
 
 const initApiStadium = (app) => {
     router.post(

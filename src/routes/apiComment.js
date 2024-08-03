@@ -1,4 +1,7 @@
 import commentController from "../controller/CommentController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiComment = (app) => {
     router.post("/create-comment", commentController.handleCreateComment);

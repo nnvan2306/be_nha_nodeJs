@@ -1,5 +1,8 @@
 import jwtAction from "../middleware/jwtAction";
 import ticketController from "../controller/ticketController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiTicket = (app) => {
     router.post(

@@ -1,5 +1,8 @@
 import jwtAction from "../middleware/jwtAction";
 import statisticController from "../controller/statisticController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiStatistic = (app) => {
     router.post(

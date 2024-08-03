@@ -1,6 +1,9 @@
 import jwtAction from "../middleware/jwtAction";
 import playerController from "../controller/playerController";
 import { uploadAvatar } from "../middleware/multer";
+import express from "express";
+
+const router = express.Router();
 
 const initApiPlayer = (app) => {
     router.post(

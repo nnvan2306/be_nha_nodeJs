@@ -1,5 +1,8 @@
 import jwtAction from "../middleware/jwtAction";
 import ratingController from "../controller/ratingController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiRating = (app) => {
     router.post(

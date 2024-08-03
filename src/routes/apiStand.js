@@ -1,5 +1,8 @@
 import jwtAction from "../middleware/jwtAction";
 import standController from "../controller/standController";
+import express from "express";
+
+const router = express.Router();
 
 const initApiStand = (app) => {
     router.post(

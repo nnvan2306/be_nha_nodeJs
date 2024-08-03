@@ -1,7 +1,9 @@
 import userController from "../controller/userController";
 import jwtAction from "../middleware/jwtAction";
-import userController from "../controller/userController";
 import { uploadAvatarUser } from "../middleware/multer";
+import express from "express";
+
+const router = express.Router();
 
 const initApiUser = (app) => {
     router.get("/refresh-token", userController.handleRefreshToken);

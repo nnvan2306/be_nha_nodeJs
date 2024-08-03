@@ -1,5 +1,8 @@
+import express from "express";
 import billController from "../controller/billController";
 import jwtAction from "../middleware/jwtAction";
+
+const router = express.Router();
 
 const initApiBill = (app) => {
     router.post("/create-bill", billController.handleCreateBill);

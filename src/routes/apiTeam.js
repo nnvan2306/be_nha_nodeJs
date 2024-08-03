@@ -1,6 +1,9 @@
 import jwtAction from "../middleware/jwtAction";
 import teamController from "../controller/teamController";
 import { upload } from "../middleware/multer";
+import express from "express";
+
+const router = express.Router();
 
 const initApiTeam = (app) => {
     router.post(
